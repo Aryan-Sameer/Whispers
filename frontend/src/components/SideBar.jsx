@@ -42,7 +42,7 @@ const SideBar = () => {
                         />
                         <span className="text-sm">Show online only</span>
                     </label>
-                    <span className="text-xs text-zinc-500">({onlineUsers.length - 1} online)</span>
+                    <span className="text-xs text-zinc-500">({users.length !==0 ? onlineUsers.length - 1 : onlineUsers.length} online)</span>
                 </div>
 
             </div>
@@ -74,7 +74,7 @@ const SideBar = () => {
                     </button>
                 ))}
 
-                {filteredUsers.length === 0 && (
+                {(filteredUsers.length === 0 && users.length !== 0) && (
                     <div className="text-center text-zinc-500 py-4 select-none">No online users</div>
                 )}
 

@@ -29,7 +29,7 @@ function App() {
   }
 
   return (
-    <main data-theme={theme} className="min-h-screen flex flex-col">
+    <main data-theme={theme} className="min-h-svh flex flex-col">
       <Navbar />
       <Routes>
         <Route path="/" element={authUser ? <HomePage /> : <Navigate to="/login" />} />

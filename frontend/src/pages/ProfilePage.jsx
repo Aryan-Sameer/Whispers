@@ -1,10 +1,12 @@
 import React, { useState } from 'react'
 import { useAuthStore } from '../store/useAuthStore'
+import { getLetters } from '../lib/utils';
+import toast from 'react-hot-toast';
+
 import { IoMdCamera } from "react-icons/io";
 import { FaUser } from "react-icons/fa";
 import { IoMail } from "react-icons/io5";
 import { MdVerified } from "react-icons/md";
-import toast from 'react-hot-toast';
 
 const ProfilePage = () => {
 
@@ -41,7 +43,7 @@ const ProfilePage = () => {
             <div className="bg-neutral text-neutral-content w-full rounded-full ">
               {authUser.profilePicture ?
                 <img src={authUser.profilePicture} /> :
-                <span className="text-3xl">{authUser.fullName.slice(0, 2).toUpperCase()}</span>
+                <span className="text-3xl">{getLetters(authUser.fullName)}</span>
               }
             </div>
           </div>

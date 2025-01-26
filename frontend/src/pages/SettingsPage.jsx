@@ -103,7 +103,7 @@ const SettingsPage = () => {
                       readOnly
                     />
                     <button className="btn btn-primary h-10 min-h-0">
-                      <IoIosSend className='size-8'/>
+                      <IoIosSend className='size-8' />
                     </button>
                   </div>
                 </div>

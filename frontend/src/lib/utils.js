@@ -5,3 +5,11 @@ export function formatMessageTime(date) {
         hour12: false,
     });
 }
+
+export function getLetters(name) {
+    let arr = name.split(" ")
+    if (arr.length > 1) {
+        return `${arr[0][0].toUpperCase()}${arr[1][0].toUpperCase()}`
+    }
+    return `${arr[0][0].toUpperCase()}${arr[0][1].toUpperCase()}`
+}

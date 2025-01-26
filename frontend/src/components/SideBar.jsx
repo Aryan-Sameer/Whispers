@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import SidebarSkeleton from './skeletons/SideBarSkeleton.jsx';
 import { useChatStore } from '../store/useChatStore.js';
 import { useAuthStore } from '../store/useAuthStore.js';
+import { getLetters } from '../lib/utils.js';
 
 import { HiUsers } from "react-icons/hi2";
 import { MdVerified } from "react-icons/md";
@@ -56,7 +57,7 @@ const SideBar = () => {
                         <div className="relative mx-auto md:mx-0 flex items-center justify-center bg-primary min-w-10 min-h-10 sm:min-w-12 sm:min-h-12 text-primary-content rounded-full ">
                             {user.profilePicture ?
                                 <img src={user.profilePicture} className="size-10 sm:size-12 object-cover rounded-full" /> :
-                                <span className="text-lg">{user.fullName?.slice(0, 2).toUpperCase()}</span>
+                                <span className="text-lg">{getLetters(user.fullName)}</span>
                             }
                             {onlineUsers.includes(user._id) && (
                                 <span

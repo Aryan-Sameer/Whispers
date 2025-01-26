@@ -37,7 +37,7 @@ const LoginPage = () => {
   };
 
   return (
-    <main className='main grid lg:grid-cols-2'>
+    <main className='grid lg:grid-cols-2 flex-grow'>
 
       <section className="left flex flex-col justify-center items-center gap-4 p-6 sm:p-12 my-auto">
 

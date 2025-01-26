@@ -8,20 +8,20 @@ const SidebarSkeleton = () => {
     return (
         <aside className="h-full lg:w-72 border-r border-base-300 flex flex-col transition-all duration-200">
             {/* Header */}
-            <div className="w-full p-3">
+            <div className="w-full p-1 sm:p-3">
                 <div className="flex items-center gap-2 animate-pulse select-none">
-                    <HiUsers className='text-2xl' />
+                    <HiUsers className='text-4xl md:text-2xl m-auto md:m-0' />
                     <span className="font-medium hidden lg:block text-2xl">Chats</span>
                 </div>
             </div>
 
             {/* Skeleton Contacts */}
-            <div className="overflow-y-auto w-full py-3">
+            <div className="overflow-y-auto w-full">
                 {skeletonContacts.map((_, idx) => (
-                    <div key={idx} className="w-full p-3 flex items-center gap-3">
+                    <div key={idx} className="w-full p-2 sm:p-3 flex items-center gap-3">
                         {/* Avatar skeleton */}
                         <div className="relative mx-auto lg:mx-0">
-                            <div className="skeleton size-12 rounded-full" />
+                            <div className="skeleton size-10 sm:size-12 rounded-full" />
                         </div>
 
                         {/* User info skeleton - only visible on larger screens */}

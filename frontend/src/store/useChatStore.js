@@ -53,6 +53,29 @@ export const useChatStore = create((set, get) => (
             }
         },
 
+        deleteMessage: async (messageId) => {
+            const { messages } = get();
+            try {
+                await axiosInstance.delete(`/message/delete/${messageId}`);
+                const updatedMessages = messages.filter((message) => message._id !== messageId)
+                set({ messages: updatedMessages });
+            } catch (error) {
+                console.log("Error in Delete Message", error);
+                toast.error(error.response.data.message);
+            }
+        },
+
+        removeMessage: async (messageId) => {
+            const { messages } = get();
+            try {
+                await axiosInstance.put(`/message/update/${messageId}`);
+                set({ messages: messages.map((message) => message._id === messageId ? { ...message, visible: false } : message) })
+            } catch (error) {
+                console.log("Error in Remove Message", error);
+                toast.error(error.response.data.message);
+            }
+        },
+
         subscribeToMessages: () => {
             const { selectedUser } = get()
             if (!selectedUser) return;
@@ -63,11 +86,16 @@ export const useChatStore = create((set, get) => (
                 if (newMessage.senderId !== selectedUser._id) return;
                 set({ messages: [...get().messages, newMessage] });
             })
+
+            socket.on("messagedelete", ({ id }) => {
+                set({ messages: get().messages.filter((message) => message._id !== id) })
+            })
         },
 
         unsubscribeFromMessages: () => {
             const socket = useAuthStore.getState().socket;
             socket.off("newMessage");
+            socket.off("messagedelete");
         },
 
         setSelectedUser: (selectedUser) => set({ selectedUser }),

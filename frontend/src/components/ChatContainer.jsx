@@ -76,13 +76,13 @@ const ChatContainer = () => {
 
         {messages.length == 0 ?
           <div className='text-center p-4'>
-            <span className='text-md font-semibold'>Send a message to start conversation</span>
+            <span className='text-md font-semibold select-none'>Send a message to start conversation</span>
           </div> :
           messages.map((message, index) => {
             return (
               <div
                 key={message._id}
-                className={`chat mx-3 ${message.senderId === authUser._id ? "chat-end" : message.visible ? "chat-start" : " chat-start hidden"}`} >
+                className={`chat mx-2 sm:mx-3 ${message.senderId === authUser._id ? "chat-end" : message.visible ? "chat-start" : " chat-start hidden"}`} >
 
                 <div
                   className={`chat-bubble shadow-sm p-2 relative group ${message.senderId === authUser._id ? "bg-primary text-primary-content" : "bg-base-200 text-base-content"}`}>

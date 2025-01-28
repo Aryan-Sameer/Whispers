@@ -33,7 +33,7 @@ const ProfilePage = () => {
   }
 
   return (
-    <div className='flex flex-col justify-center items-center gap-4 lg:w-1/3 md:w-1/2 sm:w-3/4 mx-6 p-8 sm:mx-auto my-10 rounded-md bg-base-200'>
+    <main className='flex flex-col justify-center items-center flex-grow gap-4 lg:w-1/3 md:w-1/2 sm:w-3/4 mx-6 p-8 sm:mx-auto my-10 rounded-md bg-base-200'>
       <h2 className='text-3xl font-bold'>Your Profile</h2>
 
       <div className="ProfilePic relative">
@@ -99,7 +99,7 @@ const ProfilePage = () => {
         </div>
       </div>
 
-    </div>
+    </main>
   )
 }
 

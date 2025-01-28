@@ -15,9 +15,12 @@ const NoChatSelected = () => {
       </div>
 
       <div className="update mt-auto text-center absolute bottom-6 mx-6">
-        <p className="m-0 text-sm text-base-content/40">Update!</p>
-        <p className="text-base-content/40 text-md">
+        <p className="m-0 text-md text-base-content/40">Update!</p>
+        <p className="text-base-content/40 text-sm">
           You can now copy and delete the message on clicking the drop down option on messages
+        </p>
+        <p className="text-base-content/40 text-sm">
+          You can also now chat with your self.
         </p>
       </div>
     </div >

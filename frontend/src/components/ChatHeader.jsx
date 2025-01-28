@@ -9,6 +9,7 @@ import { MdVerified } from 'react-icons/md';
 const ChatHeader = () => {
     const { selectedUser, setSelectedUser } = useChatStore();
     const { onlineUsers } = useAuthStore();
+    const { authUser } = useAuthStore();
 
     return (
         <div className="p-2.5 border-b border-base-300 bg-base-200/50">
@@ -24,7 +25,7 @@ const ChatHeader = () => {
                     </div>
 
                     <div>
-                        <h3 className="font-medium flex items-center gap-1">{selectedUser.fullName} <span className='block md:hidden'>{selectedUser.verified ? <MdVerified /> : ""}</span></h3>
+                        <h3 className="font-medium flex items-center gap-1 hover:underline">{selectedUser.fullName} {authUser._id == selectedUser._id ? "(You)" : ""}<span className='block md:hidden'>{selectedUser.verified ? <MdVerified /> : ""}</span></h3>
                         <p className="text-sm text-base-content/70">
                             {onlineUsers.includes(selectedUser._id) ? "Online" : "Offline"}
                         </p>

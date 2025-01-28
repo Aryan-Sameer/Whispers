@@ -5,8 +5,7 @@ import { getRecieverSocketId, io } from "../lib/socket.js";
 
 export const getUsersForSidebar = async (req, res) => {
     try {
-        const LoggedInUserId = req.user._id;
-        const users = await User.find({ _id: { $ne: LoggedInUserId } }).select("-password")
+        const users = await User.find({}).select("-password")
 
         res.status(200).json(users);
     } catch (error) {

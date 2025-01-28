@@ -10,14 +10,18 @@ import { MdVerified } from "react-icons/md";
 const SideBar = () => {
 
     const { getUsers, users, selectedUser, setSelectedUser, isUsersLoading } = useChatStore();
-    const { onlineUsers } = useAuthStore();
+    const { authUser, onlineUsers } = useAuthStore();
     const [showOnlineOnly, setShowOnlineOnly] = useState(false);
 
     useEffect(() => {
         getUsers();
     }, [getUsers])
 
-    const filteredUsers = showOnlineOnly ? users.filter((user) => onlineUsers.includes(user._id)) : users;
+    const filteredUsers = showOnlineOnly ? users.filter((user) => user._id != authUser._id && onlineUsers.includes(user._id)) : 
+        [
+            ...users.filter((user) => user._id === authUser._id),
+            ...users.filter((user) => user._id !== authUser._id),
+        ]
 
     if (isUsersLoading) {
         return (
@@ -43,7 +47,7 @@ const SideBar = () => {
                         />
                         <span className="text-sm">Show online only</span>
                     </label>
-                    <span className="text-xs text-zinc-500">({onlineUsers.length - 1} online)</span>
+                    <span className="text-xs text-zinc-500">{onlineUsers.length - 1} online</span>
                 </div>
 
             </div>
@@ -59,7 +63,7 @@ const SideBar = () => {
                                 <img src={user.profilePicture} className="size-10 sm:size-12 object-cover rounded-full" /> :
                                 <span className="text-lg">{getLetters(user.fullName)}</span>
                             }
-                            {onlineUsers.includes(user._id) && (
+                            {authUser._id != user._id && onlineUsers.includes(user._id) && (
                                 <span
                                     className="absolute bottom-0 right-0 size-3 bg-green-500 rounded-full ring-1 ring-green-700"
                                 />
@@ -67,7 +71,7 @@ const SideBar = () => {
                         </div>
 
                         <div className="hidden md:block text-left min-w-0">
-                            <div className="font-medium truncate flex items-center gap-1">{user?.fullName} {user.verified ? <MdVerified /> : ""}</div>
+                            <div className="font-medium truncate flex items-center gap-1">{user?.fullName} {authUser._id == user._id ? "(You)" : ""} {user.verified ? <MdVerified /> : ""}</div>
                             <div className="text-sm text-zinc-400">
                                 {onlineUsers.includes(user?._id) ? "Online" : "Offline"}
                             </div>

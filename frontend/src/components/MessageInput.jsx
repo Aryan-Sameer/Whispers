@@ -59,7 +59,7 @@ const MessageInput = () => {
   }
 
   return (
-    <div className='mt-auto m-3'>
+    <div className='mt-auto m-2 sm:m-3'>
       {imagePreview && (
         <div className="mb-3 flex items-center gap-2">
           <div className="relative">
@@ -79,8 +79,8 @@ const MessageInput = () => {
         </div>
       )}
 
-      <form onSubmit={handleSendMessage} className="flex items-center gap-2">
-        <div className="flex-1 flex gap-2">
+      <form onSubmit={handleSendMessage} className="flex items-center gap-1 sm:gap-2">
+        <div className="flex-1 flex gap-1 sm:gap-2 relative">
           <input
             type="text"
             className="w-full input input-bordered rounded-lg input-md focus-within:outline-none"
@@ -88,6 +88,7 @@ const MessageInput = () => {
             value={text}
             onChange={(e) => setText(e.target.value)}
           />
+
           <input
             type="file"
             accept="image/*"
@@ -98,15 +99,14 @@ const MessageInput = () => {
 
           <button
             type="button"
-            className={`flex btn ${imagePreview ? "text-emerald-500" : "text-zinc-400"}`}
-            onClick={() => fileInputRef.current?.click()}
-          >
+            className={`flex absolute right-3 top-[50%] translate-y-[-50%] sm:relative sm:btn sm:top-0 sm:right-0 sm:transform-none ${imagePreview ? "text-emerald-500" : "text-zinc-400"}`}
+            onClick={() => fileInputRef.current?.click()}>
             <FaImage />
           </button>
         </div>
         <button
           type="submit"
-          className="btn btn-primary"
+          className="btn btn-primary border-none px-2 sm:px-4"
           disabled={(!text.trim() && !imagePreview) || isSendingMessage}>
           {!isSendingMessage ? <IoIosSend className='size-8' /> :
             <span className="loading loading-spinner loading-md"></span>}

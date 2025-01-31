@@ -78,6 +78,11 @@ export const deleteMessage = async (req, res) => {
             return res.status(404).json({ message: "Message not found" });
         }
 
+        if (deletedMessage.image) {
+            const publicId = deletedMessage.image.split('/').pop().split('.')[0];
+            const result = await cloudinary.uploader.destroy(publicId);
+        }
+
         const recieverId = deletedMessage.recieverId;
         const recieverSocketId = getRecieverSocketId(recieverId);
         io.to(recieverSocketId).emit("messagedelete", { id });

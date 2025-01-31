@@ -12,6 +12,7 @@ export const useChatStore = create((set, get) => (
         isUsersLoading: false,
         isMessagesLoading: false,
         isSendingMessage: false,
+        isMessageDeleting: false,
 
         getUsers: async () => {
             set({ isUsersLoading: true });
@@ -55,6 +56,7 @@ export const useChatStore = create((set, get) => (
 
         deleteMessage: async (messageId) => {
             const { messages } = get();
+            set({ isMessageDeleting: true });
             try {
                 await axiosInstance.delete(`/message/delete/${messageId}`);
                 const updatedMessages = messages.filter((message) => message._id !== messageId)
@@ -62,6 +64,8 @@ export const useChatStore = create((set, get) => (
             } catch (error) {
                 console.log("Error in Delete Message", error);
                 toast.error(error.response.data.message);
+            } finally {
+                set({ isMessageDeleting: false });
             }
         },
 

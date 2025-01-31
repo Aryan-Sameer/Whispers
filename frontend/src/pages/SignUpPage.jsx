@@ -35,6 +35,8 @@ const SignUpPage = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const success = validateForm();
+    formData.fullName = formData.fullName.trim();
+    formData.email = formData.email.trim();
     if (success === true) signup(formData);
   };
 

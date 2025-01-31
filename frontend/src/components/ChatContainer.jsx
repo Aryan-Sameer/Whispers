@@ -14,7 +14,7 @@ import toast from 'react-hot-toast';
 
 const ChatContainer = () => {
 
-  const { selectedUser, setSelectedUser, messages, isMessagesLoading, getMessages, deleteMessage, removeMessage, subscribeToMessages, unsubscribeFromMessages } = useChatStore();
+  const { selectedUser, setSelectedUser, messages, isMessagesLoading, getMessages, deleteMessage, removeMessage, isMessageDeleting, subscribeToMessages, unsubscribeFromMessages } = useChatStore();
   const { authUser } = useAuthStore();
 
   const containerRef = useRef(null);
@@ -68,6 +68,11 @@ const ChatContainer = () => {
     )
   }
 
+  const formatDate = (dateString) => {
+    const options = { year: "numeric", month: "long", day: "numeric" };
+    return new Date(dateString).toLocaleDateString(undefined, options);
+  };
+
   return (
     <article className='h-full w-full flex flex-col relative'>
       <ChatHeader />
@@ -79,46 +84,58 @@ const ChatContainer = () => {
             <span className='text-md font-semibold select-none'>Send a message to start conversation</span>
           </div> :
           messages.map((message, index) => {
+            const showDate =
+              index === 0 ||
+              formatDate(message.createdAt) !== formatDate(messages[index - 1].createdAt);
+
             return (
-              <div
-                key={message._id}
-                className={`chat mx-2 sm:mx-3 ${message.senderId === authUser._id ? "chat-end" : message.visible ? "chat-start" : " chat-start hidden"}`} >
+              <div key={message._id}>
+
+                {showDate && (
+                  <div className="date-indicator text-center my-1">
+                    <small className='bg-base-200 p-1 px-2 rounded-sm'>{formatDate(message.createdAt)}</small>
+                  </div>
+                )}
 
                 <div
-                  className={`chat-bubble shadow-sm p-2 relative group ${message.senderId === authUser._id ? "bg-primary text-primary-content" : "bg-base-200 text-base-content"}`}>
-
-                  <div className="flex flex-col">
-                    {message.image && (
-                      <img
-                        src={message.image}
-                        alt="Attachment"
-                        className="sm:max-w-[300px] rounded-md mb-2"
-                      />
-                    )}
-                    {message.text && <p>{message.text}</p>}
-                    <span className={`mt-1 text-[10px] ${message.senderId === authUser._id ? "text-primary-content/70 self-end" : "text-base-content/70"}`}>{formatMessageTime(message.createdAt)}</span>
-                  </div>
+                  className={`chat mx-2 sm:mx-3 ${message.senderId === authUser._id ? "chat-end" : message.visible ? "chat-start" : " chat-start hidden"}`} >
 
                   <div
-                    className={`dropdown absolute hidden group-hover:block top-0 
+                    className={`chat-bubble shadow-sm p-2 pb-1 relative group ${message.senderId === authUser._id ? "bg-primary text-primary-content" : "bg-base-200 text-base-content"}`}>
+
+                    <div className="flex flex-col">
+                      {message.image && (
+                        <img
+                          src={message.image}
+                          alt="Attachment"
+                          className="sm:max-w-[300px] rounded-md"
+                        />
+                      )}
+                      {message.text && <p>{message.text}</p>}
+                      <span className={`text-[10px] ${message.senderId === authUser._id ? "text-primary-content/70 self-end" : "text-base-content/70"}`}>{formatMessageTime(message.createdAt)}</span>
+                    </div>
+
+                    <div
+                      className={`dropdown absolute hidden group-hover:block top-0 
                       ${message.senderId === authUser._id ? " dropdown-left dropdown-start right-0" : "dropdown-right left-0"}`
-                    }>
-                    {<div tabIndex={0} role="button" className="dropBtn bg-base-200/80 text-base-content rounded-full p-1"><IoIosArrowDown /></div>}
+                      }>
+                      {<div tabIndex={0} role="button" className="dropBtn bg-base-200/80 text-base-content rounded-full p-1"><IoIosArrowDown /></div>}
 
-                    <ul tabIndex={0} className="dropdown-content menu bg-base-200 text-base-content rounded-lg z-[1] w-52 p-1 shadow">
-                      {message.text && <li
-                        onClick={() => copyMessage(message.text)}>
-                        <a><FaCopy className='text-lg' />Copy Message</a>
-                      </li>}
-                      <li
-                        onClick={() => handleDeleteMessage(message)}>
-                        <a><MdDelete className='text-lg' />{`${message.senderId === authUser._id ? "Unsend Message" : "Delete Message"}`}</a>
-                      </li>
-                    </ul>
+                      <ul tabIndex={0} className="dropdown-content menu bg-base-200 text-base-content rounded-lg z-[1] w-52 p-1 shadow">
+                        {message.text && <li
+                          onClick={() => copyMessage(message.text)}>
+                          <a><FaCopy className='text-lg' />Copy Message</a>
+                        </li>}
+                        <li
+                          onClick={() => handleDeleteMessage(message)}>
+                          <a><MdDelete className='text-lg' />{`${message.senderId === authUser._id ? !isMessageDeleting ? "Unsend Message" : "Unsending..." : "Delete Message"}`}</a>
+                        </li>
+                      </ul>
 
+                    </div>
                   </div>
-                </div>
 
+                </div>
               </div>
             )
           })

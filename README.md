@@ -47,8 +47,8 @@ Whispers is a full-stack, real-time chat application designed for seamless and s
 5. Open the app in your browser
 
 ## Screenshots
-![Sign-in Page](frontend/public/signin.png)
-![chat container](frontend/public/chatContainer.png)
+![Sign-in Page](frontend/public/assets/signin.png)
+![chat container](frontend/assets/chatContainer.png)
 ![Themes](frontend/public/assets/themes.png)
 ![Profile](frontend/public/assets/Profile.png)
 

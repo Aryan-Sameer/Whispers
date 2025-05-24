@@ -68,4 +68,4 @@ Contributions are welcome! If you'd like to suggest improvements or fix bugs, pl
 
 ## Contact
 - Email: aryansameer1201@gmail.com
-- GitHub: https://github.com/@Aryan-Sameer
+- GitHub: https://github.com/Aryan-Sameer

@@ -47,10 +47,17 @@ Whispers is a full-stack, real-time chat application designed for seamless and s
 5. Open the app in your browser
 
 ## Screenshots
+sign-in page
 ![Sign-in Page](frontend/public/assets/signin.png)
-![chat container](frontend/assets/chatContainer.png)
+
+chat container
+![chat container](frontend/public/assets/chatContainer.png)
+
+Themes
 ![Themes](frontend/public/assets/themes.png)
-![Profile](frontend/public/assets/Profile.png)
+
+Profile Page
+![Profile](frontend/public/assets/profile.png)
 
 ## Deployment
 Whispers is deployed on Render with automatic HTTPS and SSL encryption enabled.
@@ -61,4 +68,4 @@ Contributions are welcome! If you'd like to suggest improvements or fix bugs, pl
 
 ## Contact
 - Email: aryansameer1201@gmail.com
-- GitHub: https://github.com/@Aryan-Samee
+- GitHub: https://github.com/@Aryan-Sameer

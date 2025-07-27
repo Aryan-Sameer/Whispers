@@ -4,7 +4,6 @@ import { useChatStore } from "../store/useChatStore";
 import { getLetters } from '../lib/utils.js';
 
 import { IoMdClose } from "react-icons/io";
-import { MdVerified } from 'react-icons/md';
 
 const ChatHeader = () => {
     const { selectedUser, setSelectedUser } = useChatStore();
@@ -25,7 +24,7 @@ const ChatHeader = () => {
                     </div>
 
                     <div>
-                        <h3 className="font-medium flex items-center gap-1">{selectedUser.fullName} {authUser._id == selectedUser._id ? "(You)" : ""}<span className='block md:hidden'>{selectedUser.verified ? <MdVerified /> : ""}</span></h3>
+                        <h3 className="font-medium flex items-center gap-1">{selectedUser.fullName} {authUser._id == selectedUser._id ? "(You)" : ""}</h3>
                         <p className="text-sm text-base-content/70">
                             {onlineUsers.includes(selectedUser._id) ? "Online" : "Offline"}
                         </p>

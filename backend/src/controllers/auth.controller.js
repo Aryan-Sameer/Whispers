@@ -3,6 +3,15 @@ import { generateToken } from "../lib/utils.js";
 import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 
+export const checkAuth = (req, res) => {
+    try {
+        return res.status(200).json(req.user);
+    } catch (error) {
+        console.log("Error in checkAuth controller : ", error.message);
+        return res.status(500).json({ message: "Internal server Error" });
+    }
+}
+
 export const signup = async (req, res) => {
     const { fullName, email, password } = req.body;
     try {
@@ -104,14 +113,5 @@ export const updateProfile = async (req, res) => {
     } catch (error) {
         console.log("Error in updateProfile controller : ", error.message);
         return res.status(500).json({ message: "Internal Server Error" });
-    }
-}
-
-export const checkAuth = (req, res) => {
-    try {
-        return res.status(200).json(req.user);
-    } catch (error) {
-        console.log("Error in checkAuth controller : ", error.message);
-        return res.status(500).json({ message: "Internal server Error" });
     }
 }

@@ -11,11 +11,11 @@ const HomePage = () => {
   return (
     <main className="main flex flex-grow h-full">
 
-      <section className='bg-base-200/50'>
+      <section className={`bg-base-200/50 ${!selectedUser? "max-sm:w-full" : "max-sm:w-0"}`}>
         <SideBar />
       </section>
 
-      <section className='w-full flex justify-center items-center'>
+      <section className={`w-full flex justify-center items-center ${selectedUser? "max-sm:w-full" : "max-sm:w-0"}`}>
         {!selectedUser ? <NoChatSelected /> : <Chatcontainer />}
       </section>
 

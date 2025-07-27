@@ -3,7 +3,7 @@ import { FaLock } from "react-icons/fa";
 
 const NoChatSelected = () => {
   return (
-    <div className="flex flex-1 flex-col items-center justify-center select-none mx-4 sm:mx-0">
+    <div className="hidden sm:flex flex-1 flex-col items-center justify-center select-none mx-4 sm:mx-0">
       <div className="max-w-md text-center space-y-4 bg-base-200/50 rounded-md py-8 px-4">
         <div className="flex justify-center items-center flex-col sm:flex-row gap-4 mb-4">
           <img className="w-24 sm:w-20" src="./whispersLogo.png" alt="" />
@@ -11,7 +11,7 @@ const NoChatSelected = () => {
         </div>
 
         <p className="text-base-content/70">
-          Tension nakko le bahii, bahut secure hai yakeen kar!!
+          A secure way to connect with your family and friends to whisper your stories
         </p>
       </div>
 

@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useChatStore } from '../store/useChatStore.js'
 import { FaImage } from "react-icons/fa6";
 import { IoIosSend } from "react-icons/io";
@@ -10,7 +10,11 @@ const MessageInput = () => {
   const [imagePreview, setImagePreview] = useState(null)
   const fileInputRef = useRef(null)
 
-  const { sendMessage, isSendingMessage } = useChatStore();
+  const { sendMessage, isSendingMessage, selectedUser } = useChatStore();
+
+  useEffect(() => {
+    setText("")
+  }, [selectedUser])
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -59,7 +63,7 @@ const MessageInput = () => {
   }
 
   return (
-    <div className='mt-auto m-2 sm:m-3'>
+    <div className='mt-auto m-2'>
       {imagePreview && (
         <div className="mb-3 flex items-center gap-2">
           <div className="relative">
@@ -83,7 +87,8 @@ const MessageInput = () => {
         <div className="flex-1 flex gap-1 sm:gap-2 relative">
           <input
             type="text"
-            className="w-full input input-bordered rounded-lg input-md focus-within:outline-none"
+            disabled = {isSendingMessage}
+            className="w-full input input-bordered rounded-lg max-sm:p-2 md:p-3 input-md focus-within:outline-none"
             placeholder="Type a message..."
             value={text}
             onChange={(e) => setText(e.target.value)}
@@ -99,7 +104,7 @@ const MessageInput = () => {
 
           <button
             type="button"
-            className={`flex absolute right-3 top-[50%] translate-y-[-50%] sm:relative sm:btn sm:top-0 sm:right-0 sm:transform-none ${imagePreview ? "text-emerald-500" : "text-zinc-400"}`}
+            className={`btn border-none px-4 ${imagePreview ? "text-emerald-500" : "text-zinc-400"}`}
             onClick={() => fileInputRef.current?.click()}>
             <FaImage />
           </button>

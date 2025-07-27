@@ -10,11 +10,23 @@ import { formatMessageTime } from '../lib/utils.js';
 import { IoIosArrowDown } from "react-icons/io";
 import { FaCopy } from "react-icons/fa6";
 import { MdDelete } from "react-icons/md";
+
 import toast from 'react-hot-toast';
 
 const ChatContainer = () => {
 
-  const { selectedUser, setSelectedUser, messages, isMessagesLoading, getMessages, deleteMessage, removeMessage, isMessageDeleting, subscribeToMessages, unsubscribeFromMessages } = useChatStore();
+  const { 
+    selectedUser, 
+    setSelectedUser, 
+    messages, 
+    isMessagesLoading,
+    getMessages, 
+    deleteMessage, 
+    removeMessage, 
+    isMessageDeleting, 
+    subscribeToMessages, 
+    unsubscribeFromMessages 
+  } = useChatStore();
   const { authUser } = useAuthStore();
 
   const containerRef = useRef(null);
@@ -77,7 +89,7 @@ const ChatContainer = () => {
     <article className='h-full w-full flex flex-col relative'>
       <ChatHeader />
 
-      <div ref={containerRef} className='my-3 flex-1 overflow-y-auto'>
+      <div ref={containerRef} className='my-1 flex-1 overflow-y-auto'>
 
         {messages.length == 0 ?
           <div className='text-center p-4'>
@@ -131,10 +143,9 @@ const ChatContainer = () => {
                           <a><MdDelete className='text-lg' />{`${message.senderId === authUser._id ? !isMessageDeleting ? "Unsend Message" : "Unsending..." : "Delete Message"}`}</a>
                         </li>
                       </ul>
-
                     </div>
-                  </div>
 
+                  </div>
                 </div>
               </div>
             )

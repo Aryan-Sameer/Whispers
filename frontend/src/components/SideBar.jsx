@@ -5,7 +5,6 @@ import { useAuthStore } from '../store/useAuthStore.js';
 import { getLetters } from '../lib/utils.js';
 
 import { HiUsers } from "react-icons/hi2";
-import { MdVerified } from "react-icons/md";
 
 const SideBar = () => {
 
@@ -17,7 +16,7 @@ const SideBar = () => {
         getUsers();
     }, [getUsers])
 
-    const filteredUsers = showOnlineOnly ? users.filter((user) => user._id != authUser._id && onlineUsers.includes(user._id)) : 
+    const filteredUsers = showOnlineOnly ? users.filter((user) => user._id != authUser._id && onlineUsers.includes(user._id)) :
         [
             ...users.filter((user) => user._id === authUser._id),
             ...users.filter((user) => user._id !== authUser._id),
@@ -31,36 +30,36 @@ const SideBar = () => {
 
     return (
         <aside className="h-full lg:w-80 md:w-60 border-r border-base-300 flex flex-col transition-all duration-200">
-            <div className="w-full p-1 sm:p-3">
-                <div className="flex items-center gap-2">
-                    <HiUsers className='text-4xl md:text-2xl m-auto md:m-0' />
-                    <span className="font-medium hidden md:block text-2xl">Chats</span>
-                </div>
-
-                <div className="mt-3 hidden lg:flex items-center gap-2">
-                    <label className="cursor-pointer flex items-center gap-2">
-                        <input
-                            type="checkbox"
-                            checked={showOnlineOnly}
-                            onChange={(e) => setShowOnlineOnly(e.target.checked)}
-                            className="checkbox checkbox-sm"
-                        />
-                        <span className="text-sm">Show online only</span>
-                    </label>
-                    <span className="text-xs text-zinc-500">{onlineUsers.length - 1} online</span>
-                </div>
-
-            </div>
-
             <div className="chatList overflow-y-auto w-full">
+
+                <div className="max-md:w-max w-full p-3 select-none">
+                    <div className="flex items-center gap-2">
+                        <HiUsers className='text-2xl md:m-0' />
+                        <span className="font-medium text-2xl">Your friends</span>
+                    </div>
+
+                    <div className="mt-3 flex items-center gap-2">
+                        <label className="cursor-pointer flex items-center gap-2">
+                            <input
+                                type="checkbox"
+                                checked={showOnlineOnly}
+                                onChange={(e) => setShowOnlineOnly(e.target.checked)}
+                                className="checkbox checkbox-sm"
+                            />
+                            <span className="text-sm">Show online only</span>
+                        </label>
+                        <span className="text-xs text-zinc-500">{onlineUsers.length - 1} online</span>
+                    </div>
+                </div>
+
                 {filteredUsers.map((user) => (
                     <button
                         key={user._id}
                         onClick={() => setSelectedUser(user)}
-                        className={`w-full p-2 sm:p-3 flex items-center gap-3 hover:bg-base-300 transition-colors ${selectedUser?._id === user._id ? "bg-base-300 ring-1 ring-base-300" : ""}`}>
-                        <div className="relative mx-auto md:mx-0 flex items-center justify-center bg-primary min-w-10 min-h-10 sm:min-w-12 sm:min-h-12 text-primary-content rounded-full ">
+                        className={`w-full p-3 flex items-center gap-3 hover:bg-base-300 transition-colors ${selectedUser?._id === user._id ? "bg-base-300 ring-1 ring-base-300" : ""}`}>
+                        <div className="relative md:mx-0 flex items-center justify-center bg-primary min-w-10 min-h-10 sm:min-w-12 sm:min-h-12 text-primary-content rounded-full ">
                             {user.profilePicture ?
-                                <img src={user.profilePicture} className="size-10 sm:size-12 object-cover rounded-full" /> :
+                                <img src={user.profilePicture} className="size-12 object-cover rounded-full" /> :
                                 <span className="text-lg">{getLetters(user.fullName)}</span>
                             }
                             {authUser._id != user._id && onlineUsers.includes(user._id) && (
@@ -70,8 +69,8 @@ const SideBar = () => {
                             )}
                         </div>
 
-                        <div className="hidden md:block text-left min-w-0">
-                            <div className="font-medium truncate flex items-center gap-1">{user?.fullName} {authUser._id == user._id ? "(You)" : ""} {user.verified ? <MdVerified /> : ""}</div>
+                        <div className="block text-left min-w-0">
+                            <div className="font-medium truncate flex items-center gap-1">{user?.fullName} {authUser._id == user._id ? "(You)" : ""}</div>
                             <div className="text-sm text-zinc-400">
                                 {onlineUsers.includes(user?._id) ? "Online" : "Offline"}
                             </div>

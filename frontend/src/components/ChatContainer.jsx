@@ -15,17 +15,17 @@ import toast from 'react-hot-toast';
 
 const ChatContainer = () => {
 
-  const { 
-    selectedUser, 
-    setSelectedUser, 
-    messages, 
+  const {
+    selectedUser,
+    setSelectedUser,
+    messages,
     isMessagesLoading,
-    getMessages, 
-    deleteMessage, 
-    removeMessage, 
-    isMessageDeleting, 
-    subscribeToMessages, 
-    unsubscribeFromMessages 
+    getMessages,
+    deleteMessage,
+    removeMessage,
+    isMessageDeleting,
+    subscribeToMessages,
+    unsubscribeFromMessages
   } = useChatStore();
   const { authUser } = useAuthStore();
 

@@ -85,9 +85,16 @@ const MessageInput = () => {
 
       <form onSubmit={handleSendMessage} className="flex items-center gap-1 sm:gap-2">
         <div className="flex-1 flex gap-1 sm:gap-2 relative">
+          <button
+            type="button"
+            className={`btn border-none px-4 ${imagePreview ? "text-emerald-500" : "text-zinc-400"}`}
+            onClick={() => fileInputRef.current?.click()}>
+            <FaImage />
+          </button>
+
           <input
             type="text"
-            disabled = {isSendingMessage}
+            disabled={isSendingMessage}
             className="w-full input input-bordered rounded-lg max-sm:p-2 md:p-3 input-md focus-within:outline-none"
             placeholder="Type a message..."
             value={text}
@@ -102,12 +109,6 @@ const MessageInput = () => {
             onChange={handleImageChange}
           />
 
-          <button
-            type="button"
-            className={`btn border-none px-4 ${imagePreview ? "text-emerald-500" : "text-zinc-400"}`}
-            onClick={() => fileInputRef.current?.click()}>
-            <FaImage />
-          </button>
         </div>
         <button
           type="submit"

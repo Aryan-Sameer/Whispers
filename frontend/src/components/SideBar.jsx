@@ -52,11 +52,13 @@ const SideBar = () => {
                     </div>
                 </div>
 
-                {filteredUsers.map((user) => (
+                {filteredUsers.map((user, idx) => (<>
                     <button
                         key={user._id}
                         onClick={() => setSelectedUser(user)}
-                        className={`w-full p-3 flex items-center gap-3 hover:bg-base-300 transition-colors ${selectedUser?._id === user._id ? "bg-base-300 ring-1 ring-base-300" : ""}`}>
+                        className={`w-full p-3 flex items-center gap-3 hover:bg-base-300 transition-colors
+                            ${selectedUser?._id === user._id ? "bg-base-300 ring-1 ring-base-300" : ""}
+                            ${idx % 2 === 0 ? "max-md:bg-base-100" : ""}`}>
                         <div className="relative md:mx-0 flex items-center justify-center bg-primary min-w-10 min-h-10 sm:min-w-12 sm:min-h-12 text-primary-content rounded-full ">
                             {user.profilePicture ?
                                 <img src={user.profilePicture} className="size-12 object-cover rounded-full" /> :
@@ -76,6 +78,7 @@ const SideBar = () => {
                             </div>
                         </div>
                     </button>
+                </>
                 ))}
 
                 {(filteredUsers.length === 0 && users.length !== 0) && (

@@ -80,7 +80,7 @@ export const deleteMessage = async (req, res) => {
 
         if (deletedMessage.image) {
             const publicId = deletedMessage.image.split('/').pop().split('.')[0];
-            const result = await cloudinary.uploader.destroy(publicId);
+            await cloudinary.uploader.destroy(publicId);
         }
 
         const recieverId = deletedMessage.recieverId;

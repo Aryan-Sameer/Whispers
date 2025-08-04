@@ -30,7 +30,7 @@ export const signup = async (req, res) => {
         }
 
         const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(password, salt)
+        const hashedPassword = await bcrypt.hash(password, salt);
 
         const newUser = new User({
             fullName,
@@ -45,7 +45,7 @@ export const signup = async (req, res) => {
             res.status(201).json({ userId: newUser._id, email: newUser.email });
 
         } else {
-            return res.status(400).json({ "message": "Innvalied User Data" })
+            return res.status(400).json({ "message": "Innvalied User Data" });
         }
 
     } catch (error) {
@@ -60,19 +60,19 @@ export const login = async (req, res) => {
         const user = await User.findOne({ email });
 
         if (!user) {
-            return res.status(400).json({ message: "Invalied credentials" })
+            return res.status(400).json({ message: "Invalied credentials" });
         }
 
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
-            return res.status(400).json({ message: "Invalied credentials" })
+            return res.status(400).json({ message: "Invalied credentials" });
         }
 
         generateToken({ userId: user._id, res });
 
         res.status(200).json({
-            _id: user._id,
             userId: user._id,
+            fullName: user.fullName,
             email: user.email,
             profilePicture: user.profilePicture,
         });

@@ -1,6 +1,6 @@
 import React from 'react'
 import { useThemeStore } from '../store/useThemeStore.js'
-import { THEMES } from '../constants/index.js';
+import { THEMES } from '../lib/utils.js';
 import { IoIosSend } from "react-icons/io";
 
 const PREVIEW_MESSAGES = [

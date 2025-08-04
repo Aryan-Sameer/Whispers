@@ -52,7 +52,7 @@ const SideBar = () => {
                     </div>
                 </div>
 
-                {filteredUsers.map((user, idx) => (<>
+                {filteredUsers.map((user, idx) => (
                     <button
                         key={user._id}
                         onClick={() => setSelectedUser(user)}
@@ -78,7 +78,6 @@ const SideBar = () => {
                             </div>
                         </div>
                     </button>
-                </>
                 ))}
 
                 {(filteredUsers.length === 0 && users.length !== 0) && (

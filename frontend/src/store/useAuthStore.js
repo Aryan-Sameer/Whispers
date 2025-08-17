@@ -82,9 +82,20 @@ export const useAuthStore = create((set, get) => (
                 toast.success("Profile Updated")
             } catch (error) {
                 toast.error(error.response.data.message);
-                console.log("Error in profile update", error)
+                console.log("Error in profile update", error);
             } finally {
                 set({ isUpdatingProfile: false })
+            }
+        },
+
+        updateBio: async (data) => {
+            try {
+                const res = await axiosInstance.post('/auth/update-bio', data);
+                set({ authUser: res.data });
+                toast.success("Bio updated");
+            } catch (error) {
+                toast.error(error.response.data.message);
+                console.log("Error in bio update", error);
             }
         },
 
@@ -102,7 +113,7 @@ export const useAuthStore = create((set, get) => (
             set({ socket: socket })
 
             socket.on("getOnlineUsers", (userIds) => {
-                set({ onlineUsers: userIds })
+                set({ onlineUsers: userIds.filter(id => authUser.friends.includes(id)) })
             })
         },
 

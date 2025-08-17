@@ -1,22 +1,28 @@
 import React, { useState, useEffect } from 'react'
 import SidebarSkeleton from './skeletons/SideBarSkeleton.jsx';
+
 import { useChatStore } from '../store/useChatStore.js';
 import { useAuthStore } from '../store/useAuthStore.js';
+import { useFriendsStore } from '../store/useFriendsStore.js';
 import { getLetters } from '../lib/utils.js';
 
 import { HiUsers } from "react-icons/hi2";
+import { Link } from 'react-router-dom';
+import { IoIosArrowDown } from "react-icons/io";
 
 const SideBar = () => {
 
-    const { getUsers, users, selectedUser, setSelectedUser, isUsersLoading } = useChatStore();
+    const { selectedUser, setSelectedUser } = useChatStore();
+    const { getUsers, users, isUsersLoading } = useFriendsStore();
     const { authUser, onlineUsers } = useAuthStore();
+
     const [showOnlineOnly, setShowOnlineOnly] = useState(false);
 
     useEffect(() => {
         getUsers();
     }, [getUsers])
 
-    const filteredUsers = showOnlineOnly ? users.filter((user) => user._id != authUser._id && onlineUsers.includes(user._id)) :
+    const filteredUsers = showOnlineOnly ? users.filter((user) => onlineUsers.includes(user._id)) :
         [
             ...users.filter((user) => user._id === authUser._id),
             ...users.filter((user) => user._id !== authUser._id),
@@ -35,21 +41,28 @@ const SideBar = () => {
                 <div className="max-md:w-max w-full p-3 select-none">
                     <div className="flex items-center gap-2">
                         <HiUsers className='text-2xl md:m-0' />
-                        <span className="font-medium text-2xl">Your friends</span>
+                        <span className="font-medium text-2xl">Your Friends</span>
                     </div>
 
-                    <div className="mt-3 flex items-center gap-2">
-                        <label className="cursor-pointer flex items-center gap-2">
-                            <input
-                                type="checkbox"
-                                checked={showOnlineOnly}
-                                onChange={(e) => setShowOnlineOnly(e.target.checked)}
-                                className="checkbox checkbox-sm"
-                            />
-                            <span className="text-sm">Show online only</span>
-                        </label>
-                        <span className="text-xs text-zinc-500">{onlineUsers.length - 1} online</span>
-                    </div>
+                    {users.length > 1 ?
+                        <div className="mt-3 flex items-center gap-2">
+                            <label className="cursor-pointer flex items-center gap-2">
+                                <input
+                                    type="checkbox"
+                                    checked={showOnlineOnly}
+                                    onChange={(e) => setShowOnlineOnly(e.target.checked)}
+                                    className="checkbox checkbox-sm"
+                                />
+                                <span className="text-sm">Show online only</span>
+                            </label>
+                            <span className="text-xs text-zinc-500">{onlineUsers.length} online</span>
+                        </div> :
+                        <Link
+                            to="/friends"
+                            className="text-center text-zinc-500 select-none">
+                            Click to connect with a friend
+                        </Link>
+                    }
                 </div>
 
                 {filteredUsers.map((user, idx) => (
@@ -72,11 +85,15 @@ const SideBar = () => {
                         </div>
 
                         <div className="block text-left min-w-0">
-                            <div className="font-medium truncate flex items-center gap-1">{user?.fullName} {authUser._id == user._id ? "(You)" : ""}</div>
+                            <div className="font-medium truncate flex items-center gap-1">
+                                {user?.fullName} {authUser._id == user._id ? "(You)" : ""}
+                            </div>
+
                             <div className="text-sm text-zinc-400">
                                 {onlineUsers.includes(user?._id) ? "Online" : "Offline"}
                             </div>
                         </div>
+
                     </button>
                 ))}
 

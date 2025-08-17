@@ -115,3 +115,18 @@ export const updateProfile = async (req, res) => {
         return res.status(500).json({ message: "Internal Server Error" });
     }
 }
+
+export const updateBio = async (req, res) => {
+    try {
+        const { bio } = req.body;
+        const userId = req.user._id;
+
+        const updatedUser = await User.findByIdAndUpdate(userId, { bio }, { new: true });
+
+        res.status(200).json(updatedUser);
+
+    } catch (error) {
+        console.log("Error in updateBio controller : ", error.message);
+        return res.status(500).json({ message: "Internal Server Error" });
+    }
+}

@@ -8,6 +8,8 @@ import SignUpPage from "./pages/SignUpPage";
 import LoginPage from "./pages/LoginPage";
 import SettingsPage from "./pages/SettingsPage";
 import ProfilePage from "./pages/ProfilePage";
+import FriendsPage from "./pages/FriendsPage.jsx";
+import Notifications from "./pages/Notifications.jsx";
 
 import { useAuthStore } from "./store/useAuthStore.js";
 import { useThemeStore } from "./store/useThemeStore.js";
@@ -37,6 +39,8 @@ function App() {
         <Route path="/login" element={!authUser ? <LoginPage /> : <Navigate to="/" />} />
         <Route path="/settings" element={<SettingsPage />} />
         <Route path="/profile" element={authUser ? <ProfilePage /> : <Navigate to="/login" />} />
+        <Route path="/friends" element={authUser ? <FriendsPage /> : <Navigate to="/login" />} />
+        <Route path="/notifications" element={authUser ? <Notifications /> : <Navigate to="/login" />} />
         <Route path="/*" element={
           <div className="text-center">
             Error 404 page not found

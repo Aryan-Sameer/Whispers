@@ -4,10 +4,12 @@ import { deleteMessage, getMessages, getUsersForSidebar, removeMessage, sendMess
 
 const router = express.Router();
 
-router.get("/users", protectRoute, getUsersForSidebar);
-router.get("/:id", protectRoute, getMessages);
-router.post("/send/:id", protectRoute, sendMessage);
-router.delete("/delete/:id", protectRoute, deleteMessage);
-router.put("/update/:id", protectRoute, removeMessage)
+router.use(protectRoute);
+
+router.get("/users", getUsersForSidebar);
+router.get("/:id", getMessages);
+router.post("/send/:id", sendMessage);
+router.delete("/delete/:id", deleteMessage);
+router.put("/update/:id", removeMessage);
 
 export default router;

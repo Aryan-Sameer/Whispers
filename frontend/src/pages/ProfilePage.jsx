@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { useAuthStore } from '../store/useAuthStore'
 import { getLetters } from '../lib/utils';
 import toast from 'react-hot-toast';
@@ -7,11 +7,15 @@ import { MdLogout } from "react-icons/md";
 import { IoMdCamera } from "react-icons/io";
 import { FaUser } from "react-icons/fa";
 import { IoMail } from "react-icons/io5";
+import { BsPencilSquare } from "react-icons/bs";
 
 const ProfilePage = () => {
 
-  const { authUser, isUpdatingProfile, updateProfile, logout } = useAuthStore();
+  const { authUser, isUpdatingProfile, updateProfile, updateBio, logout } = useAuthStore();
   const [selectedImage, setSelectedImage] = useState(null);
+  const [editingBio, setEditingBio] = useState(false);
+  const [bioText, setBioText] = useState(authUser?.bio || "");
+  const bioInputRef = useRef(null)
 
   const handleImageUpdate = async (e) => {
     const file = e.target.files[0];
@@ -84,6 +88,29 @@ const ProfilePage = () => {
             readOnly
           />
         </div>
+
+        <div>
+          <small className='flex items-center m-1 gap-1'><BsPencilSquare />Your Bio</small>
+          <textarea
+            ref={bioInputRef}
+            onChange={(e) => {
+              e.target.value.length < 80 ?
+                setBioText(e.target.value) : ""
+            }}
+            className="textarea flex-1 text-sm h-10 w-full focus-within:outline-none"
+            value={bioText}
+            readOnly={!editingBio}
+          />
+
+          <button
+            className='btn btn-sm btn-primary'
+            onClick={() => {
+              setEditingBio(!editingBio);
+              !editingBio ? bioInputRef.current.focus() : updateBio({ bio: bioText.trim() });
+            }}>{!editingBio ? "Edit Bio" : "Save"}
+          </button>
+        </div>
+
       </div>
 
       <div className="info w-full my-1">
@@ -99,10 +126,10 @@ const ProfilePage = () => {
         </div>
 
         <hr className='border-[1.5px] border-primary border-opacity-20 my-2' />
-        <span 
+        <span
           onClick={() => document.getElementById('my_modal_5').showModal()}
           className='text-red-500 font-bold flex items-center gap-2 cursor-pointer w-fit select-none'>
-            <MdLogout className='text-xl' /> logout
+          <MdLogout className='text-xl' /> logout
         </span>
 
         <dialog id="my_modal_5" className="modal modal-bottom sm:modal-middle">

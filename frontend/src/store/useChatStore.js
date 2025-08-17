@@ -5,27 +5,12 @@ import { useAuthStore } from "./useAuthStore.js";
 
 export const useChatStore = create((set, get) => (
     {
-        messages: [],
-        users: [],
+        messages: [],        
         selectedUser: null,
 
-        isUsersLoading: false,
         isMessagesLoading: false,
         isSendingMessage: false,
         isMessageDeleting: false,
-
-        getUsers: async () => {
-            set({ isUsersLoading: true });
-            try {
-                const res = await axiosInstance.get("/message/users");
-                set({ users: res.data })
-            } catch (error) {
-                console.log("Error in Get Users", error);
-                toast.error(error.response.data.message);
-            } finally {
-                set({ isUsersLoading: false })
-            }
-        },
 
         getMessages: async (userId) => {
             set({ isMessagesLoading: true });

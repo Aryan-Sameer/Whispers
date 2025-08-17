@@ -74,7 +74,7 @@ const SignUpPage = () => {
             <input
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
               type="text"
-              className="grow"
+              className="grow validator"
               value={formData.email}
               placeholder="Email"
             />

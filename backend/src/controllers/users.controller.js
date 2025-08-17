@@ -21,7 +21,7 @@ export const getRecommendedUsers = async (req, res) => {
 export const getMyFriends = async (req, res) => {
     try {
         const user = await User.findById(req.user._id)
-            .select("friends").populate("friends", "fullName profilePicture");
+            .select("friends").populate("friends", "fullName profilePicture bio");
 
         res.json(user.friends);
     } catch (error) {
@@ -112,7 +112,7 @@ export const getFriendRequests = async (req, res) => {
         const incomingReqs = await FriendRequest.find({
             recipient: req.user.id,
             status: "pending",
-        }).populate("sender", "fullName profilePicture email");
+        }).populate("sender", "fullName profilePicture");
 
         res.status(200).json({ incomingReqs });
     } catch (error) {

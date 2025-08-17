@@ -33,17 +33,31 @@ const ChatHeader = () => {
                                 className="font-medium flex items-center gap-1 cursor-pointer">
                                 {selectedUser.fullName} {authUser._id == selectedUser._id ? "(You)" : ""}
                             </h3>
-                            <ul tabIndex={0} className="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
-                                <li><a
-                                    onClick={() => {
-                                        removeFriend(selectedUser._id)
-                                        setSelectedUser(null);
-                                    }}
-                                    className='text-red-500'>
-                                    Remove Friend <IoPersonRemove />
-                                </a>
-                                </li>
-                            </ul>
+
+                            {selectedUser._id !== authUser._id &&
+                                <div tabIndex={0} className="dropdown-content menu bg-base-300 z-1 w-64 p-2 shadow-sm">
+
+                                    <div className="relative flex items-center justify-center w-full aspect-video overflow-hidden">
+                                        {selectedUser.profilePicture ?
+                                            <img src={selectedUser.profilePicture} className="object-cover" /> :
+                                            <span className="text-lg bg-base-100 p-6">{getLetters(selectedUser.fullName)}</span>
+                                        }
+                                    </div>
+
+                                    <h1 className='text-xl my-1'>{selectedUser.fullName}</h1>
+                                    <p>{selectedUser.bio && `Bio: ${selectedUser.bio}`}</p>
+
+
+                                    <button
+                                        className='text-red-500 btn btn-sm mt-2'
+                                        onClick={() => {
+                                            removeFriend(selectedUser._id)
+                                            setSelectedUser(null);
+                                        }}
+                                    >
+                                        Remove Friend <IoPersonRemove />
+                                    </button>
+                                </div>}
                         </div>
                         <p className="text-sm text-base-content/70">
                             {onlineUsers.includes(selectedUser._id) ? "Online" : "Offline"}

@@ -37,7 +37,7 @@ const ChatHeader = () => {
                             {selectedUser._id !== authUser._id &&
                                 <div tabIndex={0} className="dropdown-content menu bg-base-300 z-1 w-64 p-2 shadow-sm">
 
-                                    <div className="relative flex items-center justify-center w-full aspect-video overflow-hidden">
+                                    <div className="relative flex items-center justify-center w-full aspect-square overflow-hidden">
                                         {selectedUser.profilePicture ?
                                             <img src={selectedUser.profilePicture} className="object-cover" /> :
                                             <span className="text-lg bg-base-100 p-6">{getLetters(selectedUser.fullName)}</span>

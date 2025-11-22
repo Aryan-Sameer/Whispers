@@ -1,71 +1,171 @@
-# Whispers - Real Time Chat Application
+# Real-Time Chat Application
 
-## About the Project
-Whispers is a full-stack, real-time chat application designed for seamless and secure communication. Built using the MERN stack, it supports both text and image messaging, real-time updates via WebSockets, and robust user authentication. It offers a smooth and responsive UI across all devices and includes a dark/light themes toggle.
+## Overview
+This project is a full-stack real-time chat application built to support instant one-on-one messaging, media sharing, friend requests, and secure authentication. The application leverages **Socket.IO** for real-time communication, **Cloudinary** for image storage, and **Zustand** for state management. It follows secure development best practices, using **JWT-based authentication** with HttpOnly cookies. The system is deployed on **Render** for backend hosting and supports seamless messaging with typing indicators, message deletion, and dynamic updates.
+
+---
 
 ## Features
-- Real-time messaging using WebSockets
+### 1. Real-Time Messaging
+- Instant one-on-one chat using **Socket.IO**.
+- Real-time updates for message sending and receiving.
+- Message deletion synchronized across users.
 
-- User authentication with JWT
+### 2. Media Sharing
+- Upload and share images in chat.
+- Images stored securely in **Cloudinary** with optimized delivery.
 
-- Share text and image messages
+### 3. User Management
+- User registration and login.
+- User online/offline presence.
+- Secure authentication with **JWT tokens stored in cookies**.
+- Friend request system to allow users to connect only with approved friends.
 
-- Light and dark themes
+### 4. Frontend Architecture
+- Built with **React**.
+- **Zustand** for efficient and lightweight state management.
+- API communication through **Axios**.
+- Modular component structure for scalability.
 
-- Responsive design for mobile and desktop
+### 5. Backend Architecture
+- Node.js + Express.js server.
+- REST APIs for authentication, user management, and message operations.
+- Socket.IO server instance for real-time events.
+- MongoDB used as primary database.
 
-- Secure cookie-based token storage
+### 6. Deployment
+- Backend deployed on **Render**.
+- Environment variables securely configured.
+- Cloudinary integrated via environment configuration.
 
-- Tokens auto-expire every 7 days
-
-- Passwords hashed before storing in database
-
-- HTTPS-only cookies and protection against cross-site scripting (XSS)
+---
 
 ## Tech Stack
-- Frontend: React.js, Tailwind CSS, Zustand
+### Frontend
+- React.js
+- Zustand
+- Axios
+- TailwindCSS
 
-- Backend: Node.js, Express.js
+### Backend
+- Node.js
+- Express.js
+- Socket.IO
+- MongoDB (Mongoose)
+- Cloudinary SDK
 
-- Database: MongoDB (with Mongoose)
+### DevOps / Deployment
+- Render (Backend Hosting)
+- Cloudinary (Media Storage)
 
-- Real-time Communication: WebSockets (Socket.io)
+---
 
-- Authentication: JWT (stored in secure HTTP-only cookies)
+## System Architecture Diagram
+```
+|--- Client (React) ---|
+        |
+        | Socket.IO + REST (Axios)
+        |
+|--- Node.js + Express + Socket.IO ---|
+        |
+        | Mongoose
+        |
+|--- MongoDB Database ---|
+        |
+        | Cloudinary SDK
+        |
+|--- Cloudinary Media Storage ---|
+```
 
-- Deployment: Render (with SSL support)
+---
 
-## Getting Started
-1. Clone the repository
+## Installation & Setup
+### 1. Clone the Repository
+```bash
+git clone <repo-url>
+cd chat-app
+```
 
-2. Install client and server dependencies using npm install
+### 2. Backend Setup
+```bash
+cd backend
+npm install
+```
+Create a `.env` file:
+```
+MONGO_URI=your_mongo_connection_string
+PORT=port_number
+JWT_SECRET=your_secret_key
+CLOUDINARY_CLOUD_NAME=your_cloud_name
+CLOUDINARY_API_KEY=your_api_key
+CLOUDINARY_API_SECRET=your_api_secret
+```
+Run the backend:
+```bash
+npm run dev
+```
 
-3. Configure your .env files with MongoDB URI, JWT secret, etc.
+### 3. Frontend Setup
+```bash
+cd frontend
+npm install
+npm run dev
+```
 
-4. Start both client and server
+---
 
-5. Open the app in your browser
+## Socket.IO Events
+### Server → Client Events
+- `getOnlineUsers`: Map the online users.
+- `newMessage`: Real-time delivery of incoming messages.
+- `messagedelete`: Synchronize deleted message.
 
-## Screenshots
-sign-in page
-![Sign-in Page](frontend/public/assets/signin.png)
+---
 
-chat container
-![chat container](frontend/public/assets/chatContainer.png)
+## Project Structure
+```
+chat-app/
+│
+├── backend/
+│    ├── src/
+│    │   ├── controllers/
+│    │   ├── lib/
+│    │   ├── middleware/
+│    │   ├── models/
+│    │   ├── models/
+│    │   └── index.js
+│    └── .env
+│
+├── frontend/
+│    ├── src/
+│    │   ├── components/
+│    │   ├── lib/
+│    │   ├── pages/
+│    │   ├── store/ (Zustand)
+│    │   ├── App.jsx
+│    │   ├── index.css
+│    │   └── main.jsx
+│    └── index.html
+```
 
-Themes
-![Themes](frontend/public/assets/themes.png)
+---
 
-Profile Page
-![Profile](frontend/public/assets/profile.png)
+## Security Practices
+- JWT stored in **HttpOnly cookies** to prevent XSS token theft.
+- Password hashing using **bcrypt**.
+- CORS configured with strict allowed origins.
+- Environment variables for all secrets.
 
-## Deployment
-Whispers is deployed on Render with automatic HTTPS and SSL encryption enabled.
-[Click here to visit the app](https://whispers-gi7r.onrender.com/)
+---
 
-## Contributing
-Contributions are welcome! If you'd like to suggest improvements or fix bugs, please fork the repository, make changes, and submit a pull request.
+## Future Enhancements
+- Group chats.
+- Push notifications.
+- Rate limiting.
+- Message caching.
+- Voice and video calls.
+
+---
 
 ## Contact
-- Email: aryansameer1201@gmail.com
-- GitHub: https://github.com/Aryan-Sameer
+For questions or collaborations, please reach out.

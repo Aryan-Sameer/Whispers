@@ -102,6 +102,12 @@ const SideBar = () => {
                 )}
 
             </div>
+
+            <span className='mt-auto mx-3 my-1'>
+                <a target='_blank' href="https://github.com/Aryan-Sameer/Whispers.git" className="text-sm hover:text-blue-600 hover:underline">
+                    Learn More
+                </a>
+            </span>
         </aside>
     )
 }

@@ -4,16 +4,6 @@ import Message from "../models/message.model.js";
 import cloudinary from "../lib/cloudinary.js";
 import { getRecieverSocketId, io } from "../lib/socket.js";
 
-export const getUsersForSidebar = async (req, res) => {
-    try {
-        const users = await User.find({}).select("-password")
-
-        res.status(200).json(users);
-    } catch (error) {
-        console.log("Error in getUsersForSidebar controller : ", error.message);
-        return res.status(500).json({ message: "Internal Server Error" });
-    }
-}
 
 export const getMessages = async (req, res) => {
     try {

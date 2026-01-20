@@ -15,7 +15,7 @@ const Navbar = () => {
   const { incomingRequests } = useFriendsStore();
   
   useEffect(() => {
-    incomingRequests();
+    authUser && incomingRequests();
   }, [])
 
   const number = requestsReceived.length;

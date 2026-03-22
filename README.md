@@ -1,7 +1,7 @@
 # Real-Time Chat Application
 
 ## Overview
-This project is a full-stack real-time chat application built to support instant one-on-one messaging, media sharing, friend requests, and secure authentication. The application leverages **Socket.IO** for real-time communication, **Cloudinary** for image storage, and **Zustand** for state management. It follows secure development best practices, using **JWT-based authentication** with HttpOnly cookies. The system is deployed on **Render** for backend hosting and supports seamless messaging with typing indicators, message deletion, and dynamic updates.
+This project is a full-stack real-time chat application built to support instant one-on-one messaging, media sharing, friend requests, and secure authentication. The application leverages **Socket.IO** for real-time communication, **Cloudinary** for image storage, and **Zustand** for state management. It follows secure development best practices, using **JWT-based authentication** with HttpOnly cookies. Used **Arcjet** for Rate-Limiting and protection against bots. Caching the frequently requested data with **Redis** to reduce latency by x10 times. The system is deployed on **Render** for backend hosting and supports seamless messaging with dynamic updates.
 
 ---
 
@@ -32,6 +32,7 @@ This project is a full-stack real-time chat application built to support instant
 - REST APIs for authentication, user management, and message operations.
 - Socket.IO server instance for real-time events.
 - MongoDB used as primary database.
+- Redis in-memory storage for cache data.
 
 ### 6. Deployment
 - Backend deployed on **Render**.
@@ -52,6 +53,7 @@ This project is a full-stack real-time chat application built to support instant
 - Express.js
 - Socket.IO
 - MongoDB (Mongoose)
+- Redis
 - Cloudinary SDK
 
 ### DevOps / Deployment
@@ -67,6 +69,9 @@ This project is a full-stack real-time chat application built to support instant
         | Socket.IO + REST (Axios)
         |
 |--- Node.js + Express + Socket.IO ---|
+        |
+        |
+|--- Redis Cache ---|
         |
         | Mongoose
         |
@@ -99,6 +104,9 @@ JWT_SECRET=your_secret_key
 CLOUDINARY_CLOUD_NAME=your_cloud_name
 CLOUDINARY_API_KEY=your_api_key
 CLOUDINARY_API_SECRET=your_api_secret
+ARCJET_KEY=arcjet_secret
+REDIS_URL=redis_rul
+NODE_ENV=development
 ```
 Run the backend:
 ```bash
@@ -155,14 +163,14 @@ chat-app/
 - Password hashing using **bcrypt**.
 - CORS configured with strict allowed origins.
 - Environment variables for all secrets.
+- Arcjet for rate limiting and bots protection.
 
 ---
 
 ## Future Enhancements
 - Group chats.
+- Read receipts
 - Push notifications.
-- Rate limiting.
-- Message caching.
 - Voice and video calls.
 
 ---

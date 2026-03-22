@@ -171,9 +171,8 @@ chat-app/
 - Group chats.
 - Read receipts
 - Push notifications.
-- Voice and video calls.
 
 ---
 
 ## Contact
-For questions or collaborations, please reach out.
+For queries or collaborations, please reach out.

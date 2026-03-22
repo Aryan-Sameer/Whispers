@@ -52,7 +52,7 @@ const FriendsPage = () => {
           type="text"
           name="search"
           placeholder="Search User"
-          className="input bg-slate-100 focus-within:outline-none focus-within:border-none mt-6 w-full rounded-full placeholder:select-none sm:w-[70%] md:w-[50%] lg:w-[40%] xl:w-[30%]"
+          className="input bg-base-200 focus-within:outline-none focus-within:border-none mt-6 w-full rounded-full placeholder:select-none sm:w-[70%] md:w-[50%] lg:w-[40%] xl:w-[30%]"
           onChange={handleSearch}
         />
         {!searchText && <h1 className='text-2xl font-bold mt-4 select-none'>People you might know</h1>}

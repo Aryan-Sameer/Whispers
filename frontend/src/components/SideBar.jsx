@@ -74,7 +74,7 @@ const SideBar = () => {
                             ${idx % 2 === 0 ? "max-md:bg-base-100" : ""}`}>
                         <div className="relative md:mx-0 flex items-center justify-center bg-primary min-w-10 min-h-10 sm:min-w-12 sm:min-h-12 text-primary-content rounded-full ">
                             {user.profilePicture ?
-                                <img src={user.profilePicture} className="size-12 object-cover rounded-full" /> :
+                                <img src={user.profilePicture} className="size-12 object-cover rounded-full" loading='lazy' /> :
                                 <span className="text-lg">{getLetters(user.fullName)}</span>
                             }
                             {authUser._id != user._id && onlineUsers.includes(user._id) && (

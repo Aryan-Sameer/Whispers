@@ -118,6 +118,7 @@ const ChatContainer = () => {
                     <div className="flex flex-col">
                       {message.image && (
                         <img
+                          loading='lazy'
                           src={message.image}
                           alt="Attachment"
                           className="sm:max-w-[300px] rounded-md"

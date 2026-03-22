@@ -21,7 +21,7 @@ const Navbar = () => {
   const number = requestsReceived.length;
 
   return (
-    <nav className='flex justify-between items-center px-3 h-16 shadow-md'>
+    <nav className='flex justify-between items-center px-3 py-4 shadow-md'>
       <Link to='/' className="logo flex items-center gap-1 select-none">
         <img src="./whispersLogo.png" className='h-8' alt="logo" />
         <span className='text-xl align-middle font-semibold'>Whispers</span>

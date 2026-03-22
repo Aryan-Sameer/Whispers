@@ -29,7 +29,7 @@ const Notifications = () => {
               className="w-full p-3 flex items-center gap-3 transition-colors rounded-md bg-base-200 my-2">
               <div className="relative md:mx-0 flex items-center justify-center bg-primary min-w-12 min-h-12 sm:w-10 sm:h-10 text-primary-content rounded-full ">
                 {request.sender.profilePicture ?
-                  <img src={request.sender.profilePicture} className="size-12 object-cover rounded-full" /> :
+                  <img src={request.sender.profilePicture} loading='lazy' className="size-12 object-cover rounded-full" /> :
                   <span className="text-lg">{getLetters(request.sender.fullName)}</span>
                 }
               </div>

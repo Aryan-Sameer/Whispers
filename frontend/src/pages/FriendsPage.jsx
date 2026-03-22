@@ -48,14 +48,14 @@ const FriendsPage = () => {
   return (
     <main>
       <div className='flex flex-col items-center gap-1 px-4'>
-        <h1 className='text-xl font-bold mt-4'>People you might know</h1>
         <input
           type="text"
           name="search"
           placeholder="Search User"
-          className="input input-sm input-bordered focus-within:outline-none w-full sm:w-[70%] md:w-[50%] lg:w-[40%] xl:w-[30%] mt-2"
+          className="input bg-slate-100 focus-within:outline-none focus-within:border-none mt-6 w-full rounded-full placeholder:select-none sm:w-[70%] md:w-[50%] lg:w-[40%] xl:w-[30%]"
           onChange={handleSearch}
         />
+        {!searchText && <h1 className='text-2xl font-bold mt-4 select-none'>People you might know</h1>}
       </div>
 
       <div className='grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mx-auto my-6 sm:w-[80%] lg:w-3/4 gap-2 px-4'>
@@ -68,7 +68,7 @@ const FriendsPage = () => {
                 <div className="flex gap-2 items-center">
                   <div className="flex items-center justify-center bg-primary w-12 h-12 text-primary-content rounded-full">
                     {user.profilePicture ?
-                      <img src={user.profilePicture} className="size-12 object-cover rounded-full" /> :
+                      <img src={user.profilePicture} loading='lazy' className="size-12 object-cover rounded-full" /> :
                       <span className="text-lg">{getLetters(user.fullName)}</span>
                     }
                   </div>

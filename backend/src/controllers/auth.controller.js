@@ -1,10 +1,21 @@
 import cloudinary from "../lib/cloudinary.js";
-import { generateToken } from "../lib/utils.js";
+import { generateToken } from "../lib/token.js";
 import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
+import redisClient from "../lib/redisClient.js";
 
-export const checkAuth = (req, res) => {
+export const checkAuth = async (req, res) => {
+    const cacheKey = `check_auth:${req.user._id}`;
+
     try {
+        const cachedData = await redisClient.get(cacheKey);
+
+        if (cachedData) {
+            return res.status(200).json(JSON.parse(cachedData));
+        }
+
+        await redisClient.setEx(cacheKey, 60, JSON.stringify(req.user));
+
         return res.status(200).json(req.user);
     } catch (error) {
         console.log("Error in checkAuth controller : ", error.message);
@@ -94,7 +105,7 @@ export const logout = (req, res) => {
     }
 }
 
-export const updateProfile = async (req, res) => {
+export const updateProfilePicture = async (req, res) => {
     try {
         const { profilePicture } = req.body;
         const userId = req.user._id;
@@ -107,6 +118,8 @@ export const updateProfile = async (req, res) => {
         const updatedUser = await User.findByIdAndUpdate(userId, {
             profilePicture: uploadedResponse.secure_url
         }, { new: true })
+
+        await redisClient.del(`check_auth:${req.user._id}`);
 
         res.status(200).json(updatedUser)
 
@@ -122,6 +135,8 @@ export const updateBio = async (req, res) => {
         const userId = req.user._id;
 
         const updatedUser = await User.findByIdAndUpdate(userId, { bio }, { new: true });
+
+        await redisClient.del(`check_auth:${req.user._id}`);
 
         res.status(200).json(updatedUser);
 

@@ -45,7 +45,7 @@ const ProfilePage = () => {
           <div className="avatar placeholder flex items-center justify-center">
             <div className="bg-neutral text-neutral-content w-full rounded-full ">
               {authUser.profilePicture ?
-                <img src={authUser.profilePicture} /> :
+                <img src={authUser.profilePicture} loading='lazy' /> :
                 <span className="text-3xl">{getLetters(authUser.fullName)}</span>
               }
             </div>

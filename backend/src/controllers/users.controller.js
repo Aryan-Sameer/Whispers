@@ -1,8 +1,17 @@
 import User from "../models/user.model.js";
 import FriendRequest from "../models/request.model.js";
+import redisClient from "../lib/redisClient.js";
 
 export const getRecommendedUsers = async (req, res) => {
+    const cacheKey = `recommended_users:${req.user._id}`;
+
     try {
+        const cachedData = await redisClient.get(cacheKey);
+
+        if (cachedData) {
+            return res.status(200).json(JSON.parse(cachedData));
+        }
+ 
         const users = await User.find({
             $and: [
                 { _id: { $ne: req.user._id } },
@@ -11,7 +20,9 @@ export const getRecommendedUsers = async (req, res) => {
         }
         ).select("-password -friends");
 
-        res.json(users);
+        await redisClient.set(cacheKey, JSON.stringify(users));
+
+        res.status(200).json(users);
     } catch (error) {
         console.log('Error in getRecommendedUsers:', error.message);
         res.status(500).json({ message: "Internal Server error" });
@@ -19,11 +30,21 @@ export const getRecommendedUsers = async (req, res) => {
 }
 
 export const getMyFriends = async (req, res) => {
+    const cacheKey = `my_friends:${req.user._id}`;
+
     try {
+        const cachedData = await redisClient.get(cacheKey);
+
+        if (cachedData) {
+            return res.status(200).json(JSON.parse(cachedData));
+        }
+
         const user = await User.findById(req.user._id)
             .select("friends").populate("friends", "fullName profilePicture bio");
 
-        res.json(user.friends);
+        await redisClient.setEx(cacheKey, 60, JSON.stringify(user.friends));
+
+        res.status(200).json(user.friends);
     } catch (error) {
         console.log('Error in getMyFriends:', error.message);
         res.status(500).json({ message: "Internal Server error" });
@@ -99,6 +120,7 @@ export const acceptRequest = async (req, res) => {
         });
 
         await FriendRequest.findByIdAndDelete(requestId);
+        await redisClient.del(`my_friends:${req.user._id}`);
 
         res.status(200).json({ message: "Friend request accepted" });
     } catch (error) {
@@ -197,6 +219,8 @@ export const removeFriend = async (req, res) => {
         await User.findByIdAndUpdate(friendId, {
             $pull: { friends: myId }
         });
+
+        await redisClient.del(`my_friends:${req.user._id}`);
 
         res.status(200).json({ message: "Friend removed successfully" });
     } catch (error) {

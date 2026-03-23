@@ -1,6 +1,7 @@
 import { Server } from 'socket.io';
 import http from 'http';
 import express from 'express';
+import Group from "../models/group.model.js";
 
 const app = express();
 const server = http.createServer(app);
@@ -23,6 +24,41 @@ io.on("connection", (socket) => {
     if (userId) userSocketMap[userId] = socket.id;
 
     io.emit("getOnlineUsers", Object.keys(userSocketMap));
+
+    socket.on("joinGroup", async ({ groupId }, cb) => {
+        try {
+            if (!userId || !groupId) {
+                cb?.({ ok: false, message: "Invalid join payload" });
+                return;
+            }
+
+            const group = await Group.findOne({ _id: groupId, "members.userId": userId }).select("_id");
+            if (!group) {
+                cb?.({ ok: false, message: "Not a member of this group" });
+                return;
+            }
+
+            socket.join(`group:${groupId}`);
+            cb?.({ ok: true });
+        } catch (error) {
+            console.log("Error in joinGroup socket handler:", error.message);
+            cb?.({ ok: false, message: "Failed to join group" });
+        }
+    });
+
+    socket.on("leaveGroup", ({ groupId }, cb) => {
+        try {
+            if (!groupId) {
+                cb?.({ ok: false, message: "Invalid leave payload" });
+                return;
+            }
+            socket.leave(`group:${groupId}`);
+            cb?.({ ok: true });
+        } catch (error) {
+            console.log("Error in leaveGroup socket handler:", error.message);
+            cb?.({ ok: false, message: "Failed to leave group" });
+        }
+    });
 
     socket.on("disconnect", () => {
         delete userSocketMap[userId];

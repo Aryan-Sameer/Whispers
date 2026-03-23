@@ -10,6 +10,8 @@ import { app, server } from './lib/socket.js'
 import authRoutes from './routes/auth.route.js';
 import messageRoutes from './routes/message.route.js';
 import userRoutes from './routes/users.route.js';
+import groupRoutes from './routes/groups.route.js';
+import groupMessageRoutes from './routes/groupMessage.route.js';
 
 dotenv.config();
 const PORT = process.env.PORT;
@@ -26,6 +28,8 @@ app.use(cors({
 app.use("/api/auth", authRoutes);
 app.use("/api/message", messageRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/groups", groupRoutes);
+app.use("/api/group-message", groupMessageRoutes);
 
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "../frontend/dist")))

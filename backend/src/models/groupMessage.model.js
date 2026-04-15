@@ -22,6 +22,10 @@ const groupMessageSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+    isEdited: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );
@@ -29,4 +33,3 @@ const groupMessageSchema = new mongoose.Schema(
 const GroupMessage = mongoose.model("GroupMessage", groupMessageSchema);
 
 export default GroupMessage;
-

@@ -3,6 +3,16 @@ import toast from "react-hot-toast";
 import { axiosInstance } from "../lib/axios.js";
 import { useAuthStore } from "./useAuthStore.js";
 
+const toIdString = (value) => {
+  if (!value) return "";
+  if (typeof value === "string") return value;
+  if (typeof value === "object") {
+    if (value._id) return String(value._id);
+    if (value.$oid) return String(value.$oid);
+  }
+  return String(value);
+};
+
 export const useGroupChatStore = create((set, get) => ({
   groups: [],
   selectedGroup: null,
@@ -103,6 +113,21 @@ export const useGroupChatStore = create((set, get) => ({
     }
   },
 
+  editGroupMessage: async (messageId, text) => {
+    const { messages } = get();
+    try {
+      const res = await axiosInstance.patch(`/group-message/edit/${messageId}`, { text });
+      set({
+        messages: messages.map((message) =>
+          message._id === messageId ? { ...message, ...res.data } : message
+        ),
+      });
+    } catch (error) {
+      console.log("Error in editGroupMessage:", error);
+      toast.error(error.response?.data?.message || "Failed to edit message");
+    }
+  },
+
   addMember: async (groupId, userId) => {
     try {
       await axiosInstance.post(`/groups/${groupId}/add-member/${userId}`);
@@ -118,6 +143,19 @@ export const useGroupChatStore = create((set, get) => ({
     } catch (error) {
       console.log("Error in addMember:", error);
       toast.error(error.response?.data?.message || "Failed to add member");
+    }
+  },
+
+  removeMember: async (groupId, userId) => {
+    try {
+      await axiosInstance.delete(`/groups/${groupId}/remove-member/${userId}`);
+      await get().getMyGroups();
+      const refreshed = get().groups.find((g) => g._id === groupId);
+      if (refreshed) set({ selectedGroup: refreshed });
+      toast.success("Member removed");
+    } catch (error) {
+      console.log("Error in removeMember:", error);
+      toast.error(error.response?.data?.message || "Failed to remove member");
     }
   },
 
@@ -147,16 +185,29 @@ export const useGroupChatStore = create((set, get) => ({
     // Prevent duplicate listeners when switching groups.
     socket.off("groupNewMessage");
     socket.off("groupMessageDeleted");
+    socket.off("groupMessageEdited");
 
     socket.emit("joinGroup", { groupId });
 
     socket.on("groupNewMessage", (newMessage) => {
-      if (newMessage.groupId !== groupId) return;
-      set({ messages: [...get().messages, newMessage] });
+      if (toIdString(newMessage.groupId) !== toIdString(groupId)) return;
+      set({
+        messages: get().messages.some((msg) => msg._id === newMessage._id)
+          ? get().messages
+          : [...get().messages, newMessage],
+      });
     });
 
     socket.on("groupMessageDeleted", ({ id }) => {
       set({ messages: get().messages.filter((message) => message._id !== id) });
+    });
+
+    socket.on("groupMessageEdited", (updatedMessage) => {
+      set({
+        messages: get().messages.map((message) =>
+          message._id === updatedMessage._id ? { ...message, ...updatedMessage } : message
+        ),
+      });
     });
   },
 
@@ -170,6 +221,7 @@ export const useGroupChatStore = create((set, get) => ({
 
     socket.off("groupNewMessage");
     socket.off("groupMessageDeleted");
+    socket.off("groupMessageEdited");
   },
 }));
 

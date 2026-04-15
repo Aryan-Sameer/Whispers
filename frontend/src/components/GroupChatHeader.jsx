@@ -8,8 +8,8 @@ import { IoMdClose } from "react-icons/io";
 import { IoPersonAdd } from "react-icons/io5";
 
 const GroupChatHeader = () => {
-  const { selectedGroup, setSelectedGroup, exitGroup, addMember } = useGroupChatStore();
-  const { authUser, onlineUsers } = useAuthStore();
+  const { selectedGroup, setSelectedGroup, exitGroup, addMember, removeMember } = useGroupChatStore();
+  const { authUser } = useAuthStore();
   const { users, getUsers, isUsersLoading } = useFriendsStore();
 
   const [isAddOpen, setIsAddOpen] = useState(false);
@@ -39,17 +39,15 @@ const GroupChatHeader = () => {
       .filter((u) => !memberIds.has(u._id.toString()));
   }, [users, authUser, memberIds]);
 
-  const groupOnline = useMemo(() => {
-    return (selectedGroup?.members ?? []).some((m) => {
-      const id = m.userId?._id ?? m.userId;
-      return id && onlineUsers.includes(id.toString());
-    });
-  }, [selectedGroup, onlineUsers]);
-
   const handleAdd = async (friendId) => {
     if (!selectedGroup) return;
     await addMember(selectedGroup._id, friendId);
     setIsAddOpen(false);
+  };
+
+  const handleRemoveMember = async (memberId) => {
+    if (!selectedGroup) return;
+    await removeMember(selectedGroup._id, memberId);
   };
 
   if (!selectedGroup) return null;
@@ -67,11 +65,14 @@ const GroupChatHeader = () => {
           <div>
             <div className="font-medium flex items-center gap-2">
               {selectedGroup.name}
-              {isAdmin && <span className="badge badge-success badge-sm">Admin</span>}
             </div>
-            <p className="text-sm text-base-content/70">
-              {groupOnline ? "Active now" : "No one online"}
-            </p>
+            <button
+              type="button"
+              className="text-sm text-base-content/70 hover:underline"
+              onClick={() => document.getElementById("group_info_modal").showModal()}
+            >
+              click to see group info
+            </button>
           </div>
         </div>
 
@@ -89,9 +90,8 @@ const GroupChatHeader = () => {
 
               <ul
                 tabIndex={0}
-                className={`dropdown-content menu bg-base-300 z-[1] w-72 p-2 shadow rounded-md ${
-                  isAddOpen ? "block" : "hidden"
-                }`}
+                className={`dropdown-content menu bg-base-300 z-[1] w-72 p-2 shadow rounded-md ${isAddOpen ? "block" : "hidden"
+                  }`}
               >
                 <li className="select-none opacity-80" style={{ cursor: "default" }}>
                   {isUsersLoading ? "Loading friends..." : "Add your friend to this group"}
@@ -119,14 +119,6 @@ const GroupChatHeader = () => {
           )}
 
           <button
-            type="button"
-            className="btn btn-sm bg-red-500 hover:bg-red-600 text-white border-none"
-            onClick={() => exitGroup(selectedGroup._id)}
-          >
-            Exit
-          </button>
-
-          <button
             onClick={() => setSelectedGroup(null)}
             className="bg-base-200 rounded-full p-1 m-1"
             type="button"
@@ -136,6 +128,67 @@ const GroupChatHeader = () => {
           </button>
         </div>
       </div>
+
+      <dialog id="group_info_modal" className="modal modal-bottom sm:modal-middle">
+        <div className="modal-box max-w-lg">
+          <h3 className="font-semibold text-lg">{selectedGroup.name}</h3>
+          <p className="text-sm opacity-70 mb-3">{selectedGroup.members?.length || 0} members</p>
+
+          <div className="max-h-72 overflow-y-auto space-y-2">
+            {(selectedGroup.members ?? []).map((member) => {
+              const memberUser = member.userId;
+              const memberId = memberUser?._id ?? memberUser;
+              const memberName = memberUser?.fullName || "Member";
+              const isSelf = memberId?.toString() === authUser?._id?.toString();
+              const isMemberAdmin = member.role === "admin";
+
+              return (
+                <div key={memberId} className="flex items-center justify-between bg-base-300 rounded-md p-2">
+                  <div className="flex items-center gap-2 min-w-0">
+                    <div className="w-10 h-10 rounded-full bg-primary text-primary-content flex items-center justify-center overflow-hidden">
+                      {memberUser?.profilePicture ? (
+                        <img src={memberUser.profilePicture} alt={memberName} className="w-full h-full object-cover" />
+                      ) : (
+                        <span>{getLetters(memberName)}</span>
+                      )}
+                    </div>
+                    <div className="min-w-0">
+                      <p className="font-medium truncate">
+                        {memberName} {isSelf ? "(You)" : ""}
+                      </p>
+                      <p className="text-xs opacity-70">{isMemberAdmin ? "Admin" : "Member"}</p>
+                    </div>
+                  </div>
+
+                  {isAdmin && !isSelf && !isMemberAdmin && (
+                    <button
+                      type="button"
+                      className="btn btn-sm bg-red-500 hover:bg-red-600 text-white border-none"
+                      onClick={() => handleRemoveMember(memberId.toString())}
+                    >
+                      Remove
+                    </button>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+
+          <div className="modal-action">
+            <button
+              type="button"
+              className="btn btn-sm bg-red-500 hover:bg-red-600 text-white border-none"
+              onClick={() => exitGroup(selectedGroup._id)}
+            >
+              Exit Group
+            </button>
+
+            <form method="dialog">
+              <button className="btn btn-sm">Close</button>
+            </form>
+          </div>
+        </div>
+      </dialog>
     </div>
   );
 };

@@ -7,16 +7,7 @@ const SidebarSkeleton = () => {
 
     return (
         <aside className="h-full lg:w-80 md:w-60 border-r border-base-300 flex flex-col transition-all duration-200">
-            {/* Header */}
-            <div className="w-full p-3">
-                <div className="flex items-center gap-2 animate-pulse select-none">
-                    <HiUsers className='text-2xl md:m-0' />
-                    <span className="font-medium text-2xl">Your friends</span>
-                </div>
-
-                <div className="skeleton h-4 w-32 mt-3" />
-            </div>
-
+            <div className="skeleton h-10 m-3 p-4 rounded-lg" />
             {/* Skeleton Contacts */}
             <div className="overflow-y-auto w-full">
                 {skeletonContacts.map((_, idx) => (

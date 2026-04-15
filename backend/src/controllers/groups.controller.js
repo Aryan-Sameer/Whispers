@@ -135,3 +135,38 @@ export const exitGroup = async (req, res) => {
   }
 };
 
+export const removeMember = async (req, res) => {
+  try {
+    const { groupId, userId } = req.params;
+    const myId = req.user._id;
+
+    const group = await Group.findById(groupId);
+    if (!group) return res.status(404).json({ message: "Group not found" });
+
+    if (group.adminId.toString() !== myId.toString()) {
+      return res.status(403).json({ message: "Only the group admin can remove members" });
+    }
+
+    if (userId === myId.toString()) {
+      return res.status(400).json({ message: "Admin cannot remove themselves" });
+    }
+
+    const isMember = group.members.some((m) => m.userId.toString() === userId);
+    if (!isMember) {
+      return res.status(404).json({ message: "User is not a member of this group" });
+    }
+
+    group.members = group.members.filter((m) => m.userId.toString() !== userId);
+    await group.save();
+
+    const withMembers = await Group.findById(groupId)
+      .populate("adminId", "fullName profilePicture")
+      .populate("members.userId", "fullName profilePicture");
+
+    res.status(200).json(withMembers);
+  } catch (error) {
+    console.log("Error in removeMember controller:", error.message);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+

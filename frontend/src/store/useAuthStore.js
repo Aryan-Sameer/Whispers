@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { axiosInstance } from '../lib/axios';
 import { useChatStore } from './useChatStore';
+import { useGroupChatStore } from './useGroupChatStore';
 import { io } from 'socket.io-client';
 import toast from 'react-hot-toast';
 
@@ -99,13 +100,39 @@ export const useAuthStore = create((set, get) => (
             }
         },
 
+        updateName: async (data) => {
+            try {
+                const res = await axiosInstance.put('/auth/update-name', data);
+                set({ authUser: normalizeAuthUser(res.data) });
+                toast.success("Name updated");
+            } catch (error) {
+                toast.error(error.response?.data?.message || "Failed to update name");
+                console.log("Error in name update", error);
+            }
+        },
+
+        deleteAccount: async () => {
+            try {
+                await axiosInstance.delete('/auth/delete-account');
+                set({ authUser: null });
+                useChatStore.getState().setSelectedUser(null);
+                useGroupChatStore.getState().setSelectedGroup(null);
+                get().disConnectSocket();
+                toast.success("Account deleted successfully");
+            } catch (error) {
+                toast.error(error.response?.data?.message || "Failed to delete account");
+                console.log("Error in delete account", error);
+            }
+        },
+
         connectSocket: () => {
             const { authUser } = get();
-            if (!authUser || get().socket?.connect) return;
+            const authUserId = authUser?._id ?? authUser?.userId;
+            if (!authUserId || get().socket?.connected) return;
 
             const socket = io(BASE_URL, {
                 query: {
-                    userId: authUser._id,
+                    userId: authUserId,
                 },
             });
             socket.connect();
@@ -113,7 +140,8 @@ export const useAuthStore = create((set, get) => (
             set({ socket: socket })
 
             socket.on("getOnlineUsers", (userIds) => {
-                set({ onlineUsers: userIds.filter(id => authUser.friends.includes(id)) })
+                const friendIds = authUser.friends ?? [];
+                set({ onlineUsers: userIds.filter(id => friendIds.includes(id)) })
             })
         },
 

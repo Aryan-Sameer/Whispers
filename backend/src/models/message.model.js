@@ -21,6 +21,10 @@ const messageSchema = new mongoose.Schema(
         visible: {
             type: Boolean,
             default: true
+        },
+        isEdited: {
+            type: Boolean,
+            default: false
         }
     },
     {

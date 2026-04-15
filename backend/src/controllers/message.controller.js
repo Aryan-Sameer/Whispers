@@ -99,3 +99,38 @@ export const removeMessage = async (req, res) => {
         return res.status(500).json({ message: "Internal Server Error" });
     }
 }
+
+export const editMessage = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { text } = req.body;
+        const myId = req.user._id;
+
+        if (typeof text !== "string" || !text.trim()) {
+            return res.status(400).json({ message: "Message text is required" });
+        }
+
+        const message = await Message.findById(id);
+        if (!message) {
+            return res.status(404).json({ message: "Message not found" });
+        }
+
+        if (message.senderId.toString() !== myId.toString()) {
+            return res.status(403).json({ message: "Only sender can edit this message" });
+        }
+
+        message.text = text.trim();
+        message.isEdited = true;
+        const updatedMessage = await message.save();
+
+        const recieverSocketId = getRecieverSocketId(message.recieverId);
+        if (recieverSocketId) {
+            io.to(recieverSocketId).emit("messageEdited", updatedMessage);
+        }
+
+        return res.status(200).json(updatedMessage);
+    } catch (error) {
+        console.log("Error in editMessage controller: ", error.message);
+        return res.status(500).json({ message: "Internal Server Error" });
+    }
+}

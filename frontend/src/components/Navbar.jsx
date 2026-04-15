@@ -7,7 +7,6 @@ import { IoMdNotifications } from "react-icons/io";
 import { Link } from 'react-router-dom';
 
 import { useFriendsStore } from '../store/useFriendsStore';
-import { HiUsers } from "react-icons/hi2";
 
 const Navbar = () => {
 
@@ -46,14 +45,6 @@ const Navbar = () => {
           <Link to="/friends" className="friends flex items-center gap-1 cursor-pointer rounded-full bg-base-200 p-2 sm:py-0">
             <FaUserFriends className='text-xl' />
             <span className='text-lg hidden sm:block'>Friends</span>
-          </Link>
-        }
-
-        {
-          authUser &&
-          <Link to="/groups" className="friends flex items-center gap-1 cursor-pointer rounded-full bg-base-200 p-2 sm:py-0">
-            <HiUsers className='text-xl' />
-            <span className='text-lg hidden sm:block'>Groups</span>
           </Link>
         }
 

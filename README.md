@@ -10,6 +10,7 @@ This project is a full-stack real-time chat application built to support instant
 - Instant one-on-one chat using **Socket.IO**.
 - Real-time updates for message sending and receiving.
 - Message deletion synchronized across users.
+- Message editing support in both one-on-one and group chats.
 
 ### 2. Media Sharing
 - Upload and share images in chat.
@@ -127,6 +128,10 @@ npm run dev
 - `getOnlineUsers`: Map the online users.
 - `newMessage`: Real-time delivery of incoming messages.
 - `messagedelete`: Synchronize deleted message.
+- `messageEdited`: Synchronize edited one-on-one message.
+- `groupNewMessage`: Real-time group message delivery.
+- `groupMessageDeleted`: Synchronize deleted group message.
+- `groupMessageEdited`: Synchronize edited group message.
 
 ---
 
@@ -168,7 +173,6 @@ chat-app/
 ---
 
 ## Future Enhancements
-- Group chats.
 - Read receipts
 - Push notifications.
 

@@ -9,7 +9,7 @@ import { formatMessageTime } from '../lib/utils.js';
 
 import { IoIosArrowDown } from "react-icons/io";
 import { FaCopy } from "react-icons/fa6";
-import { MdDelete } from "react-icons/md";
+import { MdDelete, MdEdit } from "react-icons/md";
 
 import toast from 'react-hot-toast';
 
@@ -23,6 +23,7 @@ const ChatContainer = () => {
     getMessages,
     deleteMessage,
     removeMessage,
+    editMessage,
     isMessageDeleting,
     subscribeToMessages,
     unsubscribeFromMessages
@@ -61,6 +62,20 @@ const ChatContainer = () => {
   const copyMessage = (message) => {
     navigator.clipboard.writeText(message)
     toast.success("Copied to clipboard")
+  }
+
+  const handleEditMessage = async (message) => {
+    const editedText = window.prompt("Edit your message", message.text || "");
+    if (editedText === null) return;
+
+    const trimmedText = editedText.trim();
+    if (!trimmedText) {
+      toast.error("Message cannot be empty");
+      return;
+    }
+
+    if (trimmedText === message.text) return;
+    await editMessage(message._id, trimmedText);
   }
 
   const handleEscKey = (event) => {
@@ -125,7 +140,9 @@ const ChatContainer = () => {
                         />
                       )}
                       {message.text && <p>{message.text}</p>}
-                      <span className={`text-[10px] ${message.senderId === authUser._id ? "text-primary-content/70 self-end" : "text-base-content/70"}`}>{formatMessageTime(message.createdAt)}</span>
+                      <span className={`text-[10px] ${message.senderId === authUser._id ? "text-primary-content/70 self-end" : "text-base-content/70"}`}>
+                        {formatMessageTime(message.createdAt)} {message.isEdited ? "(edited)" : ""}
+                      </span>
                     </div>
 
                     <div
@@ -139,9 +156,14 @@ const ChatContainer = () => {
                           onClick={() => copyMessage(message.text)}>
                           <a><FaCopy className='text-lg' />Copy Message</a>
                         </li>}
+                        {message.senderId === authUser._id && message.text && (
+                          <li onClick={() => handleEditMessage(message)}>
+                            <a><MdEdit className='text-lg' />Edit Message</a>
+                          </li>
+                        )}
                         <li
                           onClick={() => handleDeleteMessage(message)}>
-                          <a><MdDelete className='text-lg' />{`${message.senderId === authUser._id ? !isMessageDeleting ? "Unsend Message" : "Unsending..." : "Delete Message"}`}</a>
+                          <a><MdDelete className='text-lg' />{message.senderId === authUser._id ? !isMessageDeleting ? "Unsend Message" : "Unsending..." : "Delete Message"}</a>
                         </li>
                       </ul>
                     </div>

@@ -11,7 +11,7 @@ export const getGroupMessages = async (req, res) => {
     const group = await Group.findOne({ _id: groupId, "members.userId": myId });
     if (!group) return res.status(403).json({ message: "You are not a member of this group" });
 
-    const messages = await GroupMessage.find({ groupId }).sort({ createdAt: 1 });
+    const messages = await GroupMessage.find({ groupId }).populate("senderId", "fullName").sort({ createdAt: 1 });
     res.status(200).json(messages);
   } catch (error) {
     console.log("Error in getGroupMessages controller:", error.message);
@@ -41,8 +41,10 @@ export const sendGroupMessage = async (req, res) => {
       image: imageUrl,
     });
 
-    io.to(`group:${groupId}`).emit("groupNewMessage", newMessage);
-    res.status(201).json(newMessage);
+    const populatedMessage = await newMessage.populate("senderId", "fullName");
+
+    io.to(`group:${groupId}`).emit("groupNewMessage", populatedMessage);
+    res.status(201).json(populatedMessage);
   } catch (error) {
     console.log("Error in sendGroupMessage controller:", error.message);
     res.status(500).json({ message: "Internal Server Error" });
@@ -93,6 +95,39 @@ export const removeGroupMessage = async (req, res) => {
     res.status(200).json(removedMessage);
   } catch (error) {
     console.log("Error in removeGroupMessage controller:", error.message);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+export const editGroupMessage = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { text } = req.body;
+    const myId = req.user._id;
+
+    if (typeof text !== "string" || !text.trim()) {
+      return res.status(400).json({ message: "Message text is required" });
+    }
+
+    const message = await GroupMessage.findById(id);
+    if (!message) return res.status(404).json({ message: "Message not found" });
+
+    const group = await Group.findOne({ _id: message.groupId, "members.userId": myId });
+    if (!group) return res.status(403).json({ message: "You are not a member of this group" });
+
+    if (message.senderId.toString() !== myId.toString()) {
+      return res.status(403).json({ message: "Only sender can edit this message" });
+    }
+
+    message.text = text.trim();
+    message.isEdited = true;
+    await message.save();
+
+    const updatedMessage = await GroupMessage.findById(id).populate("senderId", "fullName");
+    io.to(`group:${message.groupId}`).emit("groupMessageEdited", updatedMessage);
+    res.status(200).json(updatedMessage);
+  } catch (error) {
+    console.log("Error in editGroupMessage controller:", error.message);
     res.status(500).json({ message: "Internal Server Error" });
   }
 };

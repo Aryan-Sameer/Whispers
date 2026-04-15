@@ -9,7 +9,7 @@ import MessageSkeleton from "./skeletons/MessageSkeleton.jsx";
 import { formatMessageTime } from "../lib/utils.js";
 import { IoIosArrowDown } from "react-icons/io";
 import { FaCopy } from "react-icons/fa6";
-import { MdDelete } from "react-icons/md";
+import { MdDelete, MdEdit } from "react-icons/md";
 
 import toast from "react-hot-toast";
 
@@ -22,6 +22,7 @@ const GroupChatContainer = () => {
     getGroupMessages,
     deleteGroupMessage,
     removeGroupMessage,
+    editGroupMessage,
     isMessageDeleting,
     subscribeToGroupMessages,
     unsubscribeFromGroupMessages,
@@ -49,7 +50,7 @@ const GroupChatContainer = () => {
 
   const handleDeleteMessage = async (message) => {
     try {
-      if (message.senderId === authUser._id) {
+      if (message.senderId._id === authUser._id) {
         await deleteGroupMessage(message._id);
       } else {
         await removeGroupMessage(message._id);
@@ -63,6 +64,20 @@ const GroupChatContainer = () => {
   const copyMessage = (text) => {
     navigator.clipboard.writeText(text);
     toast.success("Copied to clipboard");
+  };
+
+  const handleEditMessage = async (message) => {
+    const editedText = window.prompt("Edit your message", message.text || "");
+    if (editedText === null) return;
+
+    const trimmedText = editedText.trim();
+    if (!trimmedText) {
+      toast.error("Message cannot be empty");
+      return;
+    }
+
+    if (trimmedText === message.text) return;
+    await editGroupMessage(message._id, trimmedText);
   };
 
   const handleEscKey = useCallback((event) => {
@@ -90,8 +105,6 @@ const GroupChatContainer = () => {
     return new Date(dateString).toLocaleDateString(undefined, options);
   };
 
-  if (!selectedGroup) return null;
-
   return (
     <article className="h-full w-full flex flex-col relative">
       <GroupChatHeader />
@@ -115,16 +128,20 @@ const GroupChatContainer = () => {
                 )}
 
                 <div
-                  className={`chat mx-2 sm:mx-3 ${
-                    message.senderId === authUser._id ? "chat-end" : message.visible ? "chat-start" : "chat-start hidden"
-                  }`}
-                >
-                  <div
-                    className={`chat-bubble shadow-sm p-2 pb-1 relative group ${
-                      message.senderId === authUser._id
-                        ? "bg-primary text-primary-content"
-                        : "bg-base-200 text-base-content"
+                  className={`chat mx-2 sm:mx-3 flex flex-col
+                    ${message.senderId._id === authUser._id ? "chat-end" : message.visible ? "chat-start" : "chat-start hidden"
                     }`}
+                >
+                  {
+                    (index === 0 || messages[index - 1].senderId.fullName !== message.senderId.fullName) &&
+                    message.senderId._id !== authUser._id &&
+                    <small className="font-bold text-primary">{message.senderId.fullName}</small>
+                  }
+                  <div
+                    className={`chat-bubble shadow-sm p-2 relative group ${message.senderId._id === authUser._id
+                      ? "bg-primary text-primary-content"
+                      : "bg-base-200 text-base-content"
+                      }`}
                   >
                     <div className="flex flex-col">
                       {message.image && (
@@ -137,18 +154,16 @@ const GroupChatContainer = () => {
                       )}
                       {message.text && <p>{message.text}</p>}
                       <span
-                        className={`text-[10px] ${
-                          message.senderId === authUser._id ? "text-primary-content/70 self-end" : "text-base-content/70"
-                        }`}
+                        className={`text-[10px] ${message.senderId._id === authUser._id ? "text-primary-content/70 self-end" : "text-base-content/70"
+                          }`}
                       >
-                        {formatMessageTime(message.createdAt)}
+                        {formatMessageTime(message.createdAt)} {message.isEdited ? "(edited)" : ""}
                       </span>
                     </div>
 
                     <div
-                      className={`dropdown absolute hidden group-hover:block top-0 ${
-                        message.senderId === authUser._id ? "dropdown-left dropdown-start right-0" : "dropdown-right left-0"
-                      }`}
+                      className={`dropdown absolute hidden group-hover:block top-0 ${message.senderId._id === authUser._id ? "dropdown-left dropdown-start right-0" : "dropdown-right left-0"
+                        }`}
                     >
                       <div
                         tabIndex={0}
@@ -168,14 +183,23 @@ const GroupChatContainer = () => {
                           </li>
                         )}
 
+                        {message.senderId._id === authUser._id && message.text && (
+                          <li onClick={() => handleEditMessage(message)}>
+                            <a>
+                              <MdEdit className="text-lg" />
+                              Edit Message
+                            </a>
+                          </li>
+                        )}
+
                         <li onClick={() => handleDeleteMessage(message)}>
                           <a>
                             <MdDelete className="text-lg" />
-                            {message.senderId === authUser._id
+                            {message.senderId._id === authUser._id
                               ? !isMessageDeleting
                                 ? "Unsend Message"
                                 : "Unsending..."
-                              : "Remove Message"}
+                              : "Delete Message"}
                           </a>
                         </li>
                       </ul>

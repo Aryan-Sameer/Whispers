@@ -65,6 +65,21 @@ export const useChatStore = create((set, get) => (
             }
         },
 
+        editMessage: async (messageId, text) => {
+            const { messages } = get();
+            try {
+                const res = await axiosInstance.patch(`/message/edit/${messageId}`, { text });
+                set({
+                    messages: messages.map((message) =>
+                        message._id === messageId ? { ...message, ...res.data } : message
+                    )
+                });
+            } catch (error) {
+                console.log("Error in Edit Message", error);
+                toast.error(error.response?.data?.message || "Failed to edit message");
+            }
+        },
+
         subscribeToMessages: () => {
             const { selectedUser } = get()
             if (!selectedUser) return;
@@ -79,12 +94,21 @@ export const useChatStore = create((set, get) => (
             socket.on("messagedelete", ({ id }) => {
                 set({ messages: get().messages.filter((message) => message._id !== id) })
             })
+
+            socket.on("messageEdited", (updatedMessage) => {
+                set({
+                    messages: get().messages.map((message) =>
+                        message._id === updatedMessage._id ? { ...message, ...updatedMessage } : message
+                    )
+                });
+            })
         },
 
         unsubscribeFromMessages: () => {
             const socket = useAuthStore.getState().socket;
             socket.off("newMessage");
             socket.off("messagedelete");
+            socket.off("messageEdited");
         },
 
         setSelectedUser: (selectedUser) => set({ selectedUser }),

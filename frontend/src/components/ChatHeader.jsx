@@ -32,7 +32,7 @@ const ChatHeader = () => {
               <h3
                 tabIndex={0}
                 className="font-medium flex items-center gap-1 cursor-pointer">
-                {selectedUser.fullName} {authUser._id == selectedUser._id ? "(You)" : ""}
+                {selectedUser.fullName}
               </h3>
 
               {selectedUser._id !== authUser._id &&
@@ -62,7 +62,11 @@ const ChatHeader = () => {
                 </div>}
             </div>
             <p className="text-sm text-base-content/70">
-              {onlineUsers.includes(selectedUser._id) ? "Online" : "Offline"}
+              {
+                selectedUser._id !== authUser._id ?
+                onlineUsers.includes(selectedUser._id) ? "Online" : "Offline" : 
+                "online"
+              }
             </p>
           </div>
         </div>

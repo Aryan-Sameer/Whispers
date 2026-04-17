@@ -12,7 +12,7 @@ const HomePage = () => {
   const hasSelection = Boolean(selectedUser || selectedGroup);
 
   return (
-    <main className="main flex flex-grow h-full">
+    <main className="flex flex-grow h-[calc(100svh-70px)]">
 
       <section className={`bg-base-200/50 ${!hasSelection ? "max-sm:w-full" : "max-sm:w-0"}`}>
         <SideBar />

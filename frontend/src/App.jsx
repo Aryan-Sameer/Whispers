@@ -42,7 +42,7 @@ function App() {
         <Route path="/friends" element={authUser ? <FriendsPage /> : <Navigate to="/login" />} />
         <Route path="/notifications" element={authUser ? <Notifications /> : <Navigate to="/login" />} />
         <Route path="/*" element={
-          <div className="text-center">
+          <div className="text-center my-6">
             Error 404 page not found
           </div>
         } />

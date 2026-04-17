@@ -87,7 +87,7 @@ const SideBar = () => {
                                 </div> :
                                 <Link
                                     to="/friends"
-                                    className="text-center text-zinc-500 select-none">
+                                    className="text-center select-none text-primary hover:underline">
                                     Click to connect with a friend
                                 </Link>
                             }
@@ -140,11 +140,15 @@ const SideBar = () => {
 
                         <div className="block text-left min-w-0">
                             <div className="font-medium truncate flex items-center gap-1">
-                                {user?.fullName} {authUser._id == user._id ? "(You)" : ""}
+                                {user?.fullName}
                             </div>
 
                             <div className="text-sm text-zinc-400">
-                                {onlineUsers.includes(user?._id) ? "Online" : "Offline"}
+                                {
+                                    user._id !== authUser._id ? 
+                                    onlineUsers.includes(user?._id) ? "Online" : "Offline" :
+                                    "Message Yourself"
+                                }
                             </div>
                         </div>
 

@@ -17,7 +17,7 @@ const NoChatSelected = () => {
 
       <footer className="mt-auto text-center absolute bottom-6 mx-6 flex flex-col items-center gap-2">
         <span className="text-sm">Whispers v4.0.0</span>
-        <span className="flex items-center gap-2 text-sm"><FaLock /> Secure Data Transfer</span>
+        <span className="flex items-center gap-2 text-sm"><FaLock /> Secure Messaging</span>
       </footer>
     </div >
   );

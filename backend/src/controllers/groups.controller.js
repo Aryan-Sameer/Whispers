@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import Group from "../models/group.model.js";
+import redisClient from "../lib/redisClient.js";
 
 const isFriend = (user, otherId) => {
   return user.friends?.some((f) => f.toString() === otherId) ?? false;
@@ -10,12 +11,22 @@ const getGroupAuthView = async (groupId) => {
 };
 
 export const getMyGroups = async (req, res) => {
+  const cacheKey = `myGroups:${req.user._id}`;
+
   try {
+    const cachedData = await redisClient.get(cacheKey);
+
+    if (cachedData) {
+      return res.status(200).json(JSON.parse(cachedData));
+    }
+
     const myId = req.user._id;
 
     const groups = await Group.find({ "members.userId": myId })
       .populate("adminId", "fullName profilePicture")
       .populate("members.userId", "fullName profilePicture");
+
+    await redisClient.setEx(cacheKey, 60, JSON.stringify(groups));
 
     res.status(200).json(groups);
   } catch (error) {
@@ -42,6 +53,8 @@ export const createGroup = async (req, res) => {
     const populated = await Group.findById(group._id)
       .populate("adminId", "fullName profilePicture")
       .populate("members.userId", "fullName profilePicture");
+
+    await redisClient.del(`myGroups:${req.user._id}`);
 
     res.status(201).json(populated);
   } catch (error) {
@@ -169,4 +182,3 @@ export const removeMember = async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
-

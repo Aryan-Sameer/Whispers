@@ -20,7 +20,7 @@ export const getRecommendedUsers = async (req, res) => {
         }
         ).select("-password -friends");
 
-        await redisClient.set(cacheKey, JSON.stringify(users));
+        await redisClient.setEx(cacheKey, 60, JSON.stringify(users));
 
         res.status(200).json(users);
     } catch (error) {
@@ -121,6 +121,7 @@ export const acceptRequest = async (req, res) => {
 
         await FriendRequest.findByIdAndDelete(requestId);
         await redisClient.del(`my_friends:${req.user._id}`);
+        await redisClient.del(`recommended_users:${req.user._id}`);
 
         res.status(200).json({ message: "Friend request accepted" });
     } catch (error) {
@@ -195,6 +196,7 @@ export const cancelRequest = async (req, res) => {
         }
 
         await FriendRequest.findByIdAndDelete(requestId);
+        await redisClient.del(`recommended_users:${req.user._id}`)
 
         res.status(200).json({ message: "Friend request canceled" });
     } catch (error) {
@@ -221,6 +223,7 @@ export const removeFriend = async (req, res) => {
         });
 
         await redisClient.del(`my_friends:${req.user._id}`);
+        await redisClient.del(`recommended_users:${req.user._id}`);
 
         res.status(200).json({ message: "Friend removed successfully" });
     } catch (error) {

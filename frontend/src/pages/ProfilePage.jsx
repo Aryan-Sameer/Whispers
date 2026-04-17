@@ -109,7 +109,7 @@ const ProfilePage = () => {
             <textarea
               ref={bioInputRef}
               onChange={(e) => {
-                e.target.value.length < 80 ?
+                e.target.value.length < 60 ?
                   setBioText(e.target.value) : ""
               }}
               className="textarea flex-1 text-sm h-10 w-full focus-within:outline-none"

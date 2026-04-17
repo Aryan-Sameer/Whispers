@@ -138,7 +138,7 @@ const GroupChatContainer = () => {
                     <small className="font-bold text-primary">{message.senderId.fullName}</small>
                   }
                   <div
-                    className={`chat-bubble shadow-sm p-2 relative group ${message.senderId._id === authUser._id
+                    className={`chat-bubble shadow-sm p-2 pb-1 relative group ${message.senderId._id === authUser._id
                       ? "bg-primary text-primary-content"
                       : "bg-base-200 text-base-content"
                       }`}

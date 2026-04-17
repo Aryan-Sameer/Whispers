@@ -1,5 +1,6 @@
 import express from "express";
 import { protectRoute } from "../middleware/auth.middleware.js";
+import { arcjetProtection } from "../middleware/arcjet.middleware.js";
 import { 
     getRecommendedUsers,
     getMyFriends, 
@@ -15,6 +16,7 @@ import {
 const router = express.Router();
 
 router.use(protectRoute);
+router.use(arcjetProtection);
 
 router.get("/", getRecommendedUsers);
 router.get("/friends", getMyFriends);

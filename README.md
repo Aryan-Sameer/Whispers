@@ -145,7 +145,7 @@ chat-app/
 │    │   ├── lib/
 │    │   ├── middleware/
 │    │   ├── models/
-│    │   ├── models/
+│    │   ├── routes/
 │    │   └── index.js
 │    └── .env
 │

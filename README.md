@@ -174,7 +174,9 @@ chat-app/
 
 ## Future Enhancements
 - Read receipts
-- Push notifications.
+- Pagination for messages
+- Push notifications with redis - pub-sub
+- Message Queues with redis - BullMQ
 
 ---
 

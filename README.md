@@ -181,8 +181,10 @@ chat-app/
 ---
 
 ## Future Enhancements
-- Read receipts
-- Push notifications.
+- Read receipts and user typing indicator.
+- Pagination for messages to display only required messages and reduce initial load time.
+- Push notifications to notify the user on a new message.
+- Client side queue to cache the message locally and send when connection is re-established.
 
 ---
 

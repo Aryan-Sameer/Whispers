@@ -1,7 +1,18 @@
 import Message from "../models/message.model.js";
-
+import mongoose from "mongoose";
+import { messageQueue } from "../lib/queue.js";
 import cloudinary from "../lib/cloudinary.js";
 import { getRecieverSocketId, io } from "../lib/socket.js";
+
+export const addMessageToQueue = async (data) => {
+    return await messageQueue.add('deliver-message', data, {
+        attempts: 3,
+        backoff: {
+            type: 'exponential',
+            delay: 5000
+        }
+    });
+}
 
 export const getMessages = async (req, res) => {
     try {
@@ -28,27 +39,30 @@ export const sendMessage = async (req, res) => {
         const { id: recieverId } = req.params;
         const senderId = req.user._id;
 
-        let imageUrl;
-        if (image) {
-            const uploadResponse = await cloudinary.uploader.upload(image)
-            imageUrl = uploadResponse.secure_url;
-        }
+        // Generate messageId upfront for immediate client feedback and queue consistency
+        const messageId = new mongoose.Types.ObjectId();
 
-        const newMessage = new Message(
-            {
-                senderId,
-                recieverId,
-                text,
-                image: imageUrl
-            }
-        )
+        // Queue the message delivery job (Cloudinary upload, DB save, and Socket emissions)
+        await addMessageToQueue({
+            messageId,
+            senderId,
+            recieverId,
+            text,
+            image
+        });
 
-        await newMessage.save();
-
-        const recieverSocketId = getRecieverSocketId(recieverId);
-        if (recieverSocketId) {
-            io.to(recieverSocketId).emit("newMessage", newMessage);
-        }
+        // Return a tentative message object immediately to the sender
+        const newMessage = {
+            _id: messageId,
+            senderId,
+            recieverId,
+            text,
+            image, // Includes base64 preview for immediate rendering
+            visible: true,
+            isEdited: false,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+        };
 
         res.status(201).json(newMessage);
 

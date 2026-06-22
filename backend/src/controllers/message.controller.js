@@ -39,25 +39,28 @@ export const sendMessage = async (req, res) => {
         const { id: recieverId } = req.params;
         const senderId = req.user._id;
 
-        // Generate messageId upfront for immediate client feedback and queue consistency
         const messageId = new mongoose.Types.ObjectId();
 
-        // Queue the message delivery job (Cloudinary upload, DB save, and Socket emissions)
+        let imageUrl;
+        if (image) {
+            const uploadResponse = await cloudinary.uploader.upload(image);
+            imageUrl = uploadResponse.secure_url;
+        }
+
         await addMessageToQueue({
             messageId,
             senderId,
             recieverId,
             text,
-            image
+            image: imageUrl
         });
 
-        // Return a tentative message object immediately to the sender
         const newMessage = {
             _id: messageId,
             senderId,
             recieverId,
             text,
-            image, // Includes base64 preview for immediate rendering
+            image: imageUrl,
             visible: true,
             isEdited: false,
             createdAt: new Date().toISOString(),

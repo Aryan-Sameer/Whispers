@@ -1,7 +1,7 @@
 # Real-Time Chat Application
 
 ## Overview
-This project is a full-stack real-time chat application built to support instant one-on-one messaging, media sharing, friend requests, and secure authentication. The application leverages **Socket.IO** for real-time communication, **Cloudinary** for image storage, and **Zustand** for state management. It follows secure development best practices, using **JWT-based authentication** with HttpOnly cookies. Used **Arcjet** for Rate-Limiting and protection against bots. Caching the frequently requested data with **Redis** to reduce latency by x10 times. The system is deployed on **Render** for backend hosting and supports seamless messaging with dynamic updates.
+This project is a full-stack real-time chat application built to support instant one-on-one messaging, media sharing, friend requests, and secure authentication. The application leverages **Socket.IO** for real-time communication, **Cloudinary** for image storage, and **Zustand** for state management. It follows secure development best practices, using **JWT-based authentication** with HttpOnly cookies. Used **Arcjet** for Rate-Limiting and protection against bots. Caching the frequently requested data with **Redis** to reduce latency by nearly x10 times. Implemented Queue using **BullMQ** to handle reliable message delivery in case of server downtime. The application is containerized using **Docker** and deployed on **Render** for backend hosting and supports seamless messaging with dynamic updates.
 
 ---
 
@@ -11,6 +11,7 @@ This project is a full-stack real-time chat application built to support instant
 - Real-time updates for message sending and receiving.
 - Message deletion synchronized across users.
 - Message editing support in both one-on-one and group chats.
+- User online/offline presence.
 
 ### 2. Media Sharing
 - Upload and share images in chat.
@@ -18,7 +19,6 @@ This project is a full-stack real-time chat application built to support instant
 
 ### 3. User Management
 - User registration and login.
-- User online/offline presence.
 - Secure authentication with **JWT tokens stored in cookies**.
 - Friend request system to allow users to connect only with approved friends.
 
@@ -29,13 +29,17 @@ This project is a full-stack real-time chat application built to support instant
 - Modular component structure for scalability.
 
 ### 5. Backend Architecture
-- Node.js + Express.js server.
+- Node.js + Express.js server to listen the incoming requests.
 - REST APIs for authentication, user management, and message operations.
 - Socket.IO server instance for real-time events.
 - MongoDB used as primary database.
-- Redis in-memory storage for cache data.
 
-### 6. Deployment
+### 6. Redis layer
+- In-memory storage for caching the frequently requested data.
+- Reduce the latency for recieving the responses.
+- Queue using **BullMQ** to handle reliable message delivery.
+
+### 7. Deployment
 - Backend deployed on **Render**.
 - Environment variables securely configured.
 - Cloudinary integrated via environment configuration.
@@ -58,6 +62,7 @@ This project is a full-stack real-time chat application built to support instant
 - Cloudinary SDK
 
 ### DevOps / Deployment
+- Docker (Containerization)
 - Render (Backend Hosting)
 - Cloudinary (Media Storage)
 
@@ -147,7 +152,8 @@ chat-app/
 │    │   ├── models/
 │    │   ├── routes/
 │    │   └── index.js
-│    └── .env
+│    ├── .env
+│    └── Dockerfile
 │
 ├── frontend/
 │    ├── src/
@@ -158,7 +164,9 @@ chat-app/
 │    │   ├── App.jsx
 │    │   ├── index.css
 │    │   └── main.jsx
-│    └── index.html
+│    ├── Dockerfile
+│    ├── index.html
+│    └── nginx.conf
 ```
 
 ---

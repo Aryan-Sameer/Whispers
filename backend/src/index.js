@@ -24,7 +24,7 @@ app.use(cookieParser());
 
 const allowedOrigins = [
   "http://localhost:5173",
-  process.env.FRONTEND_URL
+  process.env.FRONTEND_URL ? process.env.FRONTEND_URL.replace(/\/$/, "") : ""
 ].filter(Boolean);
 
 app.use(cors({
